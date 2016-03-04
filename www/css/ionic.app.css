@@ -9792,6 +9792,12 @@ body {
   .dark a {
     color: #F0F1F1; }
 
+.item-complex .item-content, .item-radio .item-content {
+  position: relative;
+  z-index: 2;
+  border: none;
+  background-color: transparent; }
+
 .bg-positive {
   background-color: #1E439E !important; }
   .bg-positive p {

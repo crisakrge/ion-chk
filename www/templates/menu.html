@@ -1,0 +1,44 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <!-- Header -->
+    <ion-nav-bar class="bar-positive">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    
+    <!--Vista de las páginas principales-->
+    <ion-nav-view name="chtkeView"></ion-nav-view>
+
+  </ion-side-menu-content>
+
+  <!--Elementos del menú lateral-->
+  <ion-side-menu side="left">
+    <ion-header-bar class="bar-energized">
+      <h1 class="title">Menú</h1>
+    </ion-header-bar>
+    <ion-content class="dark">
+      <ion-list>
+        <ion-item menu-close href="#/registro">
+          Asistencia
+        </ion-item>
+        <ion-item menu-close href="#/">
+          Rondinero
+        </ion-item>
+        <ion-item menu-close href="#/">
+          Modo Administrador
+        </ion-item>
+        <ion-item menu-close href="#/tipoRegistro">
+          Registro
+        </ion-item>
+        <ion-item menu-close href="#/chkt/acercaDe">
+          Acerca De
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

@@ -93,6 +93,14 @@ body{
   }
 }
 
+.item-complex .item-content, .item-radio .item-content {
+    position: relative;
+    z-index: 2;
+    //padding: 0px;
+    border: none;
+    background-color: transparent;
+}
+
 //Colores de fondo
 .bg{
   &-positive{

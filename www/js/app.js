@@ -33,13 +33,26 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
     url: '/init',
     templateUrl: 'templates/init.html'
   })
-  // Extracto del estado del Chkte
-  .state('chkte', {
-    url: '/chkte',
-    templateUrl: 'templates/chkte.html',
-    controller: 'ChkteCtrl'
 
-  })
+  // Estado para el Menú principal
+  .state('chkt', {
+    url: '/chkt',
+    abstract: true,
+    templateUrl: 'templates/menu.html',
+    controller: 'AppCtrl'
+    })
+
+  // Extracto del estado del Chkte
+  .state('chkt.registro', {
+    url: '/registro',
+      views: {
+        'chtkeView': {
+          templateUrl: 'templates/chkte.html',
+          controller: 'ChkteCtrl'
+        }
+      }
+    })
+
   // Extracto del estado Tipo de Registro
   .state('regType', {
     url: '/tipoRegistro',
@@ -47,10 +60,14 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
     controller: 'regTypeCtrl'
   })
   // Extracto del estado de la página Acerca De
-  .state('acerca', {
+  .state('chkt.acerca', {
     url: '/acercaDe',
-    templateUrl: 'templates/acercade.html',
-    controller: 'acercaCtrl'
+      views: {
+        'chtkeView': {
+          templateUrl: 'templates/acercade.html',
+          controller: 'acercaCtrl'
+        }
+      }
   })
 
   $urlRouterProvider.otherwise('/init');

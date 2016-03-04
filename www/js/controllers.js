@@ -24,9 +24,13 @@ angular.module('starter.controllers', [])
   };
 })
 
+.controller('AppCtrl', function($scope, $state) {
+  
+})
+
 .controller('loginCtrl', function($scope, $state) {
   $scope.loginSend = function() {
-    $state.go('chkte');
+    $state.go('chkt.registro');
     $scope.loginChk.hide();
   };
 })
@@ -45,23 +49,12 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('loginCtrl', function($scope, $state) {
-  $scope.loginSend = function() {
-    $state.go('chkte');
-    $scope.loginChk.hide();
-  };
-
-})
-
 .controller('acercaCtrl', function($scope, $state) {
-  $scope.myGoBack = function() {
-    $state.go('chkte');
-  };
 })
 
 .controller('regTypeCtrl', function($scope, $state) {
   $scope.registraTe = function() {
-    $state.go('chkte');
+    $state.go('chkt.registro');
   };
 })
 
