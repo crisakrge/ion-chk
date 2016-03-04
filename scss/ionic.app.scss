@@ -1,0 +1,152 @@
+/*
+To customize the look and feel of Ionic, you can override the variables
+in ionic's _variables.scss file.
+
+For example, you might change some of the default colors:
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #387ef5 !default;
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #ffc900 !default;
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+*/
+
+
+$positive:                        #1E439E !default;
+$calm:                            #2B82E9 !default;
+$energized:                       #FF8600 !default;
+$chkte:                          #032750 !default;
+$dark:                           #3f4041;
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+
+// Estilos
+body{
+	background-color: #000000 !important;
+}
+.content-chkte{
+	background-color: $chkte;
+	background: -moz-radial-gradient(center, ellipse cover,  #0d4f9d 3%, #0d4f9d 3%, #032750 100%); /* FF3.6-15 */
+	background: -webkit-radial-gradient(center, ellipse cover,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* Chrome10-25,Safari5.1-6 */
+	background: radial-gradient(ellipse at center,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0d4f9d', endColorstr='#032750',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.content-reg{ 
+  background-image: url(../img/chkte/back.jpg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.chikte-img{
+  display: block;
+  width: 50%;
+  position: absolute;
+  left: 214px;
+  bottom: -180px;
+}
+.logo-img{
+	margin-top: 60px;
+}
+.login-btns{
+	margin-top: 40%;
+	button {
+		margin: 15px auto !important;
+	}
+}
+
+.dark {
+  background-color: #3f4041 !important;
+  color: #ffffff;
+  .scroll-content {
+    background-color: #3f4041 !important;
+  }
+  .item {
+    background-color: $dark;
+    border: none;
+    border-top: 1px solid #464646;
+    border-bottom: 2px solid #333333;
+    padding: 20px;
+    color: #F0F1F1;
+    max-height: none;
+
+    &:last-child {
+      border-bottom: 1px solid #333333;
+    }
+    &.current{ background-color:darken( $dark, 10% )   !important;
+       border-top: 1px solid #464646 !important;
+    border-bottom: 2px solid #333333 !important;
+      p,h3{opacity: .7;}
+            }
+  }
+  h2,
+  h3,
+  p,
+  a{
+    color: #F0F1F1;
+  }
+}
+
+//Colores de fondo
+.bg{
+  &-positive{
+    background-color: $positive !important;
+    p{
+      color:$light;
+    }
+  }
+  &-energized{
+    background-color: $energized !important;
+      color:$light;
+    p{
+      color:$light;
+    }
+  }
+}
+
+//Registro y Login
+.item-stacked-label {
+    background-color: #fff;
+}
+.login{
+  h2{
+    color: $energized;
+    font-size: 1.7em;
+  }
+  .img-rounded{
+    border-radius: 25px;
+    border: solid 5px $calm; 
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+    img{
+      width: 100%;
+    }
+  }
+  a{
+    margin-top: 25px;
+    font-size: 1.1em;
+    color: #fff;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+
+
+
+//Alineación de texto 
+
+.text-center{
+  text-align: center;
+}
+.text-justify{
+  text-align: justify;
+}
