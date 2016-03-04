@@ -24,17 +24,12 @@ angular.module('starter.controllers', [])
   };
 })
 
+//Controlador Principal
 .controller('AppCtrl', function($scope, $state) {
   
 })
 
-.controller('loginCtrl', function($scope, $state) {
-  $scope.loginSend = function() {
-    $state.go('chkt.registro');
-    $scope.loginChk.hide();
-  };
-})
-
+//(Controlador de los Popups de registro y login
 .controller('initCtrl', function($scope, $ionicModal){
   $ionicModal.fromTemplateUrl('templates/registro.html',{
     scope: $scope
@@ -46,50 +41,75 @@ angular.module('starter.controllers', [])
   }).then(function(loginChk){
     $scope.loginChk = loginChk;
   });
-
 })
 
-.controller('acercaCtrl', function($scope, $state) {
-})
-
+//Controlador del Registro Principal
 .controller('regTypeCtrl', function($scope, $state) {
   $scope.registraTe = function() {
     $state.go('chkt.registro');
   };
 })
 
-.controller('ChkteCtrl', function($scope, $ionicSideMenuDelegate, $state, $ionicPopup) {
-  $scope.toggleLeft = function() {
-    $ionicSideMenuDelegate.toggleLeft();
-  };
-  $scope.registroInit = function() {
-    
-    $ionicPopup.alert({
-       title: 'Chkte',
-       template: 'Tomate una fotografía para corroborar tu identidad'
-    });
+//Controlador del Login
+.controller('loginCtrl', function($scope, $state, $cordovaTouchID) {
 
-    function onSuccess() {
+  $cordovaTouchID.authenticate("Ingresa a Chkte").then(function() {
+    // success
+  }, function () {
+    // error
+  });
 
-    }
-
-    function onFail() {
-      alert('Falló debido a: ' + message);
-    }
-
-    navigator.camera.getPicture(onSuccess, onFail, {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      direction: 1
-    });
-
-    $ionicPopup.alert({
-       title: 'Chkte',
-       template: 'Escanea el código Qr para continuar con tu registro'
-    });
+  $scope.loginSend = function() {
+    $state.go('chkt.registro');
+    $scope.loginChk.hide();
   };
 })
 
+//Controlador del Registro de Asistencia
+.controller('ChkteCtrl', function($scope, $state, $ionicPopup, $state) {
+
+  $scope.registroInit = function() {
+    
+    // Alerta de toma de fotografìa
+    var photoAlert = $ionicPopup.alert({
+     title: '! Mejor Chkte ',
+     template: 'Tomate una fotografía para corroborar tu identidad'
+    });
+
+    // Al clickear la alerta
+    photoAlert.then(function() {
+
+      console.log('Alerta de la toma de fotografía');
+
+      // Llamada a la cámara del dispositivo
+      var takePhoto = navigator.camera.getPicture(onSuccess, onFail, {
+        quality: 50,
+        destinationType: Camera.DestinationType.DATA_URL,
+        direction: 0
+      });
+
+
+      // Si la foto es satisfactoria se continua el proceso de registro
+      function onSuccess() {
+        // Alerta para escaneo de código Qr
+        var qrAlert = $ionicPopup.alert({
+        title: '! Mejor Chkte ¡',
+        template: 'Escanea tu código QR para continuar tu registro.'
+        });
+
+        // Al clickear la alerta se inicia el escaner del QR
+        qrAlert.then(
+
+          );
+      };
+
+      // Si ocurre algún error al tomar la fotografía
+      function onFail() {
+        alert('Falló debido a: ' + message);
+      };
+    });
+  };
+})
 
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
