@@ -50,23 +50,36 @@ angular.module('starter.controllers', [])
   };
 })
 
+//Controlador del Registro Principal
+.controller('regConfirmCtrl', function($scope, $state) {
+
+})
+
 //Controlador del Login
 .controller('loginCtrl', function($scope, $state, $cordovaTouchID) {
 
-  $cordovaTouchID.authenticate("Ingresa a Chkte").then(function() {
-    // success
-  }, function () {
-    // error
-  });
+  
 
   $scope.loginSend = function() {
-    $state.go('chkt.registro');
-    $scope.loginChk.hide();
+    $cordovaTouchID.checkSupport().then(function() {
+            $cordovaTouchID.authenticate("Mejor Chkte ID").then(function() {
+                $state.go('chkt.registro');
+                $scope.loginChk.hide();
+            }, function(error) {
+                console.log(JSON.stringify(error));
+            });
+        }, function(error) {
+            console.log(JSON.stringify(error));
+        });
+    console.log('Que pasiòn');
+
+    //$state.go('chkt.registro');
+    //$scope.loginChk.hide();
   };
 })
 
 //Controlador del Registro de Asistencia
-.controller('ChkteCtrl', function($scope, $state, $ionicPopup, $state) {
+.controller('ChkteCtrl', function($scope, $state, $ionicPopup, $cordovaBarcodeScanner) {
 
   $scope.registroInit = function() {
     
@@ -99,6 +112,17 @@ angular.module('starter.controllers', [])
 
         // Al clickear la alerta se inicia el escaner del QR
         qrAlert.then(
+
+            $scope.leerCodigo = function(){
+              $cordovaBarcodeScanner.scan().then(function(imagenEscaneada){
+                var qrAlert = $ionicPopup.alert({
+                title: '! Mejor Chkte ¡',
+                template: imagenEscaneada.text
+                });
+              }, function(error){
+                alert("Ha ocurrido un error:"+ error);
+              });
+            }
 
           );
       };

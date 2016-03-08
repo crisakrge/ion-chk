@@ -118,6 +118,22 @@ body{
   }
 }
 
+//Colores de fondo
+.txt{
+  &-energized{
+    color: $energized;
+  }
+  &-light{
+    color: $light;
+  }
+  &-calm{
+    color: $calm;
+  }
+  &-positiv{
+    color: $positiv;
+  }
+}
+
 //Registro y Login
 .item-stacked-label {
     background-color: #fff;

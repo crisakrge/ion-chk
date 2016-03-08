@@ -9809,6 +9809,9 @@ body {
   .bg-energized p {
     color: #fff; }
 
+.txt-energized {
+  color: #FF8600; }
+
 .item-stacked-label {
   background-color: #fff; }
 

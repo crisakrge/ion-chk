@@ -23,8 +23,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   });
 })
 
-
-
 .config(function($stateProvider, $urlRouterProvider){
   $stateProvider
 
@@ -59,6 +57,14 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
     templateUrl: 'templates/regSelect.html',
     controller: 'regTypeCtrl'
   })
+
+  // Extracto de confirmaciòn de registro
+  .state('regConfirm', {
+    url: '/confirmacion-registro',
+    templateUrl: 'templates/regConfirm.html',
+    controller: 'regConfirmCtrl'
+  })
+
   // Extracto del estado de la página Acerca De
   .state('chkt.acerca', {
     url: '/acercaDe',
