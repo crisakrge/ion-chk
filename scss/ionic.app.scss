@@ -30,14 +30,14 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Estilos
 body{
-	background-color: #000000 !important;
+  background-color: #000000 !important;
 }
 .content-chkte{
-	background-color: $chkte;
-	background: -moz-radial-gradient(center, ellipse cover,  #0d4f9d 3%, #0d4f9d 3%, #032750 100%); /* FF3.6-15 */
-	background: -webkit-radial-gradient(center, ellipse cover,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* Chrome10-25,Safari5.1-6 */
-	background: radial-gradient(ellipse at center,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0d4f9d', endColorstr='#032750',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+  background-color: $chkte;
+  background: -moz-radial-gradient(center, ellipse cover,  #0d4f9d 3%, #0d4f9d 3%, #032750 100%); /* FF3.6-15 */
+  background: -webkit-radial-gradient(center, ellipse cover,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* Chrome10-25,Safari5.1-6 */
+  background: radial-gradient(ellipse at center,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0d4f9d', endColorstr='#032750',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 .content-reg{ 
@@ -53,13 +53,13 @@ body{
   bottom: -180px;
 }
 .logo-img{
-	margin-top: 60px;
+  margin-top: 60px;
 }
 .login-btns{
-	margin-top: 40%;
-	button {
-		margin: 15px auto !important;
-	}
+  margin-top: 40%;
+  button {
+    margin: 15px auto !important;
+  }
 }
 
 .dark {
@@ -145,15 +145,7 @@ body{
     color: $calm;
   }
   &-positive{
-<<<<<<< HEAD
-<<<<<<< HEAD
-    color: $positiv;
-=======
     color: $positive;
->>>>>>> VistasLogin
-=======
-    color: $positive;
->>>>>>> VistasLogin
   }
 }
 
