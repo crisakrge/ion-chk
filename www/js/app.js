@@ -27,6 +27,13 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   $stateProvider
 
   // Extracto del estado del Init
+  .state('home', {
+    url: '/home',
+    templateUrl: 'templates/home.html',
+    controller: 'homeCtrl'
+  })
+
+  // Extracto del estado del Init
   .state('init', {
     url: '/init',
     templateUrl: 'templates/init.html'
@@ -64,19 +71,28 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
     templateUrl: 'templates/regConfirm.html',
     controller: 'regConfirmCtrl'
   })
+  
+  // Extracto del estado del Administrador
+  .state('chkt.admin', {
+    url: '/admin',
+      views: {
+        'chtkeView': {
+          templateUrl: 'templates/admin.html'
+        }
+      }
+  })
 
   // Extracto del estado de la página Acerca De
   .state('chkt.acerca', {
     url: '/acercaDe',
       views: {
         'chtkeView': {
-          templateUrl: 'templates/acercade.html',
-          controller: 'acercaCtrl'
+          templateUrl: 'templates/acercade.html'
         }
       }
   })
 
-  $urlRouterProvider.otherwise('/init');
+  $urlRouterProvider.otherwise('/home');
 })
 
 document.addEventListener("deviceready", onDeviceReady, false);
