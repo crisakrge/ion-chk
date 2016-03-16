@@ -20,6 +20,7 @@ $positive:                        #1E439E !default;
 $calm:                            #2B82E9 !default;
 $energized:                       #FF8600 !default;
 $chkte:                          #032750 !default;
+$assertive:                       #FF450D !default;
 $dark:                           #3f4041;
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -101,6 +102,15 @@ body{
     background-color: transparent;
 }
 
+//Alineación de texto 
+
+.text-center{
+  text-align: center;
+}
+.text-justify{
+  text-align: justify;
+}
+
 //Colores de fondo
 .bg{
   &-positive{
@@ -116,9 +126,14 @@ body{
       color:$light;
     }
   }
+  &-dark {
+    background-color: $dark !important;
+    color: $light;
+  }
+
 }
 
-//Colores de fondo
+//Colores de texto
 .txt{
   &-energized{
     color: $energized;
@@ -129,8 +144,8 @@ body{
   &-calm{
     color: $calm;
   }
-  &-positiv{
-    color: $positiv;
+  &-positive{
+    color: $positive;
   }
 }
 
@@ -162,15 +177,4 @@ body{
     text-align: center;
     text-decoration: none;
   }
-}
-
-
-
-//Alineación de texto 
-
-.text-center{
-  text-align: center;
-}
-.text-justify{
-  text-align: justify;
 }

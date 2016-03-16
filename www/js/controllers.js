@@ -1,6 +1,33 @@
 angular.module('starter.controllers', [])
 
-.controller('initRegCtrl', function($scope) {
+
+//Controlador Principal
+.controller('AppCtrl', function($scope, $state) {
+})
+
+//Controlador de la Pantalla de Bienvenida
+.controller('homeCtrl', function($scope, $state, $ionicModal) {
+  $scope.individual = function(){
+    $state.go('chkt.regsimple');
+  };
+  $scope.multiple = function(){
+    $state.go('chkt.regmultiple');
+  };
+  $ionicModal.fromTemplateUrl('templates/regSim.html',{
+    scope: $scope
+  }).then(function(regSim){
+    $scope.regSim = regSim;
+  });
+  $ionicModal.fromTemplateUrl('templates/regMul.html',{
+    scope: $scope
+  }).then(function(regMul){
+    $scope.regMul = regMul;
+  });
+})
+
+//Controlador del Registro Simple
+.controller('regSimCtrl', function($scope, $ionicPopup) {
+  $scope.simple = "Individual";
   $scope.regPick = function() {
     function onSuccess(data) {
       $scope.$apply(function () {
@@ -22,15 +49,48 @@ angular.module('starter.controllers', [])
       direction: 1
     });
   };
+
+  $scope.usuario = {nombre: "", mail: "", pass: "", key: "", cli: ""};
+
+  $scope.enviarReg = function(){
+
+    
+
+    var registroAlert = $ionicPopup.alert({
+     title: '! Mejor Chkte ',
+     template: 'Registro Realizado con Éxito'
+    });
+
+    registroAlert.then(function(){
+      $scope.registroChk.hide();
+    });
+  };
 })
 
-//Controlador Principal
-.controller('AppCtrl', function($scope, $state) {
-  
+//Controlador del Registro Multiple
+.controller('regMulCtrl', function($scope, $state, $cordovaTouchID) {
+  $scope.multiple = "Multiple";
+  $scope.loginSend = function() {
+    $cordovaTouchID.checkSupport().then(function() {
+            $cordovaTouchID.authenticate("Mejor Chkte ID").then(function() {
+                $state.go('chkt.registro');
+                $scope.regMul.hide();
+            }, function(error) {
+                console.log(JSON.stringify(error));
+            });
+        }, function(error) {
+            console.log(JSON.stringify(error));
+        });
+    console.log('Que pasiòn');
+
+    //$state.go('chkt.registro');
+    //$scope.loginChk.hide();
+  };
 })
 
-//(Controlador de los Popups de registro y login
-.controller('initCtrl', function($scope, $ionicModal){
+
+//Controlador de los Popups de registro y login
+.controller('initCtrl', function($scope, $ionicModal, $state){
   $ionicModal.fromTemplateUrl('templates/registro.html',{
     scope: $scope
   }).then(function(registroChk){
@@ -43,14 +103,14 @@ angular.module('starter.controllers', [])
   });
 })
 
-//Controlador del Registro Principal
+//Controlador del Tipo de Registro de Asistencia
 .controller('regTypeCtrl', function($scope, $state) {
   $scope.registraTe = function() {
     $state.go('chkt.registro');
   };
 })
 
-//Controlador del Registro Principal
+//Controlador de la Confirmación del registro
 .controller('regConfirmCtrl', function($scope, $state) {
 
 })
@@ -135,6 +195,7 @@ angular.module('starter.controllers', [])
   };
 })
 
+//Inicialización de La cámara
 document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     console.log(navigator.camera);
