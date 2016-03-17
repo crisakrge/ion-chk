@@ -5,8 +5,33 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
 
-.run(function($ionicPlatform) {
+.factory('$localstorage', ['$window', function($window) {
+  return {
+    set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || defaultValue;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '{}');
+    }
+  }
+}])
+
+
+
+.run(function($ionicPlatform, $localstorage) {
+  // Resetear Registro
+  window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");
+  // Validación de usuario registrado
+  console.log('Tipo de Registro "' + $localstorage.get('yaRegistradoS') + " " + $localstorage.get('yaRegistradoM') + '"');
+
   $ionicPlatform.ready(function() {
+
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -25,18 +50,25 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider){
   $stateProvider
-
-  // Extracto del estado del Init
+  // Extracto del estado del Home
   .state('home', {
     url: '/home',
     templateUrl: 'templates/home.html',
     controller: 'homeCtrl'
   })
 
-  // Extracto del estado del Init
-  .state('init', {
-    url: '/init',
-    templateUrl: 'templates/init.html'
+  // Extracto del estado Login Simple
+  .state('loginSim', {
+    url: '/loginS',
+    templateUrl: 'templates/loginSim.html',
+    controller: 'loginCtrl'
+  })
+
+  // Extracto del estado Login Multiple
+  .state('loginMul', {
+    url: '/loginM',
+    templateUrl: 'templates/loginMul.html',
+    controller: 'loginCtrl'
   })
 
   // Estado para el Menú principal
@@ -92,7 +124,16 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
       }
   })
 
+  //$urlRouterProvider.otherwise('/home');
+  if(window.localStorage['yaRegistradoS']){
+  $urlRouterProvider.otherwise('/loginS');
+  }
+  else if(window.localStorage['yaRegistradoM']){
+  $urlRouterProvider.otherwise('/loginM');
+  }
+  else{
   $urlRouterProvider.otherwise('/home');
+  }  
 })
 
 document.addEventListener("deviceready", onDeviceReady, false);

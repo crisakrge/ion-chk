@@ -3,31 +3,46 @@ angular.module('starter.controllers', [])
 
 //Controlador Principal
 .controller('AppCtrl', function($scope, $state) {
+
+  // Declaración de la variable para los datos del usuario 
+  $scope.sigleUser = {};
+
 })
 
 //Controlador de la Pantalla de Bienvenida
 .controller('homeCtrl', function($scope, $state, $ionicModal) {
-  $scope.individual = function(){
-    $state.go('chkt.regsimple');
+  
+  //Lanzar el Modal Individual
+  $scope.individual = function() {
+    $scope.regSim.show();
   };
-  $scope.multiple = function(){
-    $state.go('chkt.regmultiple');
+
+  //Lanzar el Modal Individual
+  $scope.multiple = function() {
+    $scope.regMul.show();
   };
+
+  //Modal del Registro Simple
   $ionicModal.fromTemplateUrl('templates/regSim.html',{
     scope: $scope
-  }).then(function(regSim){
-    $scope.regSim = regSim;
+  }).then(function(modal){
+    $scope.regSim = modal;
   });
+
+  //Modal del Registro Multiple
   $ionicModal.fromTemplateUrl('templates/regMul.html',{
     scope: $scope
-  }).then(function(regMul){
-    $scope.regMul = regMul;
+  }).then(function(modal){
+    $scope.regMul = modal;
   });
+
 })
 
 //Controlador del Registro Simple
-.controller('regSimCtrl', function($scope, $ionicPopup) {
+.controller('regSimCtrl', function($scope, $ionicPopup, $state, $localstorage) {
   $scope.simple = "Individual";
+
+  //Tomar Fotografía
   $scope.regPick = function() {
     function onSuccess(data) {
       $scope.$apply(function () {
@@ -39,6 +54,7 @@ angular.module('starter.controllers', [])
       });
       var image = document.getElementById('myImage');
       image.src = "data:image/jpeg;base64," + imageData;
+      console.log(image);
     }
     function onFail(message) {
       alert('Falló debido a: ' + message);
@@ -50,57 +66,46 @@ angular.module('starter.controllers', [])
     });
   };
 
-  $scope.usuario = {nombre: "", mail: "", pass: "", key: "", cli: ""};
+  // Realizar el Regitro Simple
+  $scope.doRegSim = function() {
+    console.log('Se realizó el Registo Simple', $scope.singleUser);
 
-  $scope.enviarReg = function(){
-
-    
-
-    var registroAlert = $ionicPopup.alert({
+    // Alerta de Registro Exitoso
+    var alertaRegSim = $ionicPopup.alert({
      title: '! Mejor Chkte ',
-     template: 'Registro Realizado con Éxito'
+     template: 'Tu registro se ha realizado con éxito'
     });
 
-    registroAlert.then(function(){
-      $scope.registroChk.hide();
+    alertaRegSim.then(function(){
+      $state.go('loginSim');
+      $scope.regSim.hide()
+      $localstorage.set('yaRegistradoS', 'Si Simple');
+      console.log( localStorage.getItem("yaRegistradoS") )
     });
   };
 })
 
 //Controlador del Registro Multiple
-.controller('regMulCtrl', function($scope, $state, $cordovaTouchID) {
+.controller('regMulCtrl', function($scope, $state, $ionicPopup, $rootScope, $localstorage) {
   $scope.multiple = "Multiple";
-  $scope.loginSend = function() {
-    $cordovaTouchID.checkSupport().then(function() {
-            $cordovaTouchID.authenticate("Mejor Chkte ID").then(function() {
-                $state.go('chkt.registro');
-                $scope.regMul.hide();
-            }, function(error) {
-                console.log(JSON.stringify(error));
-            });
-        }, function(error) {
-            console.log(JSON.stringify(error));
-        });
-    console.log('Que pasiòn');
 
-    //$state.go('chkt.registro');
-    //$scope.loginChk.hide();
+  // Realizar el Regitro Multiple
+  $scope.doRegMul = function() {
+    console.log('Se realizó el Registo Multiple', $scope.singleUser);
+
+    // Alerta de Registro Exitoso
+    var alertaRegMul = $ionicPopup.alert({
+     title: '! Mejor Chkte ',
+     template: 'Tu registro se ha realizado con éxito'
+    });
+
+    alertaRegMul.then(function(){
+      $state.go('loginMul');
+      $scope.regMul.hide()
+      $localstorage.set('yaRegistradoM', 'Si Multiple');
+      console.log( localStorage.getItem("yaRegistradoM") )
+    });
   };
-})
-
-
-//Controlador de los Popups de registro y login
-.controller('initCtrl', function($scope, $ionicModal, $state){
-  $ionicModal.fromTemplateUrl('templates/registro.html',{
-    scope: $scope
-  }).then(function(registroChk){
-    $scope.registroChk = registroChk;
-  });
-  $ionicModal.fromTemplateUrl('templates/login.html',{
-    scope: $scope
-  }).then(function(loginChk){
-    $scope.loginChk = loginChk;
-  });
 })
 
 //Controlador del Tipo de Registro de Asistencia
@@ -112,30 +117,23 @@ angular.module('starter.controllers', [])
 
 //Controlador de la Confirmación del registro
 .controller('regConfirmCtrl', function($scope, $state) {
-
 })
 
 //Controlador del Login
-.controller('loginCtrl', function($scope, $state, $cordovaTouchID) {
+.controller('loginCtrl', function($scope, $ionicModal) {
 
-  
-
-  $scope.loginSend = function() {
-    $cordovaTouchID.checkSupport().then(function() {
-            $cordovaTouchID.authenticate("Mejor Chkte ID").then(function() {
-                $state.go('chkt.registro');
-                $scope.loginChk.hide();
-            }, function(error) {
-                console.log(JSON.stringify(error));
-            });
-        }, function(error) {
-            console.log(JSON.stringify(error));
-        });
-    console.log('Que pasiòn');
-
-    //$state.go('chkt.registro');
-    //$scope.loginChk.hide();
+  //Lanzar el Modal Individual
+  $scope.logIn= function(){
+    console.log("Abrir Login");
+    $scope.loginModal.show();
   };
+
+  //Modal del Registro Simple
+  $ionicModal.fromTemplateUrl('templates/login.html',{
+    scope: $scope
+  }).then(function(modal){
+    $scope.loginModal = modal;
+  });
 })
 
 //Controlador del Registro de Asistencia
@@ -151,9 +149,7 @@ angular.module('starter.controllers', [])
 
     // Al clickear la alerta
     photoAlert.then(function() {
-
       console.log('Alerta de la toma de fotografía');
-
       // Llamada a la cámara del dispositivo
       var takePhoto = navigator.camera.getPicture(onSuccess, onFail, {
         quality: 50,
