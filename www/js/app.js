@@ -26,7 +26,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
 
 .run(function($ionicPlatform, $localstorage) {
   // Resetear Registro
-  window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");
+  //window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");
   // Validación de usuario registrado
   console.log('Tipo de Registro "' + $localstorage.get('yaRegistradoS') + " " + $localstorage.get('yaRegistradoM') + '"');
 
