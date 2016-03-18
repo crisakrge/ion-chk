@@ -4,8 +4,7 @@ angular.module('starter.controllers', [])
 //Controlador Principal
 .controller('AppCtrl', function($scope, $state) {
 
-  // Declaración de la variable para los datos del usuario 
-  $scope.sigleUser = {};
+  
 
 })
 
@@ -41,6 +40,8 @@ angular.module('starter.controllers', [])
 //Controlador del Registro Simple
 .controller('regSimCtrl', function($scope, $ionicPopup, $state, $localstorage) {
   $scope.simple = "Individual";
+  // Declaración de la variable para los datos del usuario 
+  $scope.singleUser = {};
 
   //Tomar Fotografía
   $scope.regPick = function() {
