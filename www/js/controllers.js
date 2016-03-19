@@ -1,47 +1,115 @@
-angular.module('starter.controllers', [])
+angular.module('MejorChkte.controllers', [])
 
 
-//Controlador Principal
-.controller('AppCtrl', function($scope, $state) {
-
-  
-
-})
-
-//Controlador de la Pantalla de Bienvenida
-.controller('homeCtrl', function($scope, $state, $ionicModal) {
-  
-  //Lanzar el Modal Individual
-  $scope.individual = function() {
-    $scope.regSim.show();
-  };
-
-  //Lanzar el Modal Individual
-  $scope.multiple = function() {
-    $scope.regMul.show();
-  };
+//===============================================================
+//               Controlador Principal de la APP
+//===============================================================
+.controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup) {
 
   //Modal del Registro Simple
   $ionicModal.fromTemplateUrl('templates/regSim.html',{
     scope: $scope
-  }).then(function(modal){
-    $scope.regSim = modal;
+  }).then(function(modal1){
+    $scope.regSim = modal1;
   });
 
   //Modal del Registro Multiple
   $ionicModal.fromTemplateUrl('templates/regMul.html',{
     scope: $scope
-  }).then(function(modal){
-    $scope.regMul = modal;
+  }).then(function(modal2){
+    $scope.regMul = modal2;
   });
 
+  //Lanzar el Modal Registro Individual
+  $scope.individual = function() {
+    $scope.regSim.show();
+  };
+
+  //Lanzar el Modal Registro Multiple
+  $scope.multiple = function() {
+    $scope.regMul.show();
+  };
+
+  //Modal del Login Administrador
+  $ionicModal.fromTemplateUrl('templates/adminLogin.html',{
+    scope: $scope
+  }).then(function(modal3){
+    $scope.adminLogin = modal3;
+  });
+
+  //Lanzar el Modal Registro Individual
+  $scope.administradorLogin = function() {
+    $scope.adminLogin.show();
+  };
+
+  //===============================================================
+  //                  Registro Individual
+  //===============================================================
+  $scope.simple = "Individual";
+  // Declaración de la variable para los datos del usuario 
+  $rootScope.singleUser = {};
+
+  // Realizar el Regitro Simple
+  $scope.doRegSim = function() {
+
+    console.log('Se realizó el Registo Simple', $rootScope.singleUser);
+
+    // Alerta de Registro Exitoso
+    var alertaRegSim = $ionicPopup.alert({
+     title: '! Mejor Chkte ',
+     template: 'Tu registro se ha realizado con éxito'
+    });
+
+    //Cerrar Modal y Mandar registro al Localstorage
+    alertaRegSim.then(function(){
+      $state.go('loginSim');
+      $scope.regSim.hide();
+      $localstorage.set('yaRegistradoS', 'Si Simple');
+      $localstorage.setObject('UsuarioSimple', $rootScope.singleUser);  
+      console.log( $localstorage.get("yaRegistradoS") );  
+      console.log( $localstorage.getObject("UsuarioSimple") );
+    });
+  };
+
+
+  //===============================================================
+  //                  Registro Multiple
+  //===============================================================
+  // Variable Registro Individual
+  $scope.multiple = "Multiple";
+  // Declaración de la variable para los datos del usuario 
+  $rootScope.mulUser = [];
+
+  // Realizar el Regitro Simple
+  $scope.doRegMul = function() {
+
+    console.log('Se realizó el Registo Multiple', $rootScope.mulUser);
+
+    // Alerta de Registro Exitoso
+    var alertaRegMul = $ionicPopup.alert({
+     title: '! Mejor Chkte ',
+     template: 'Tu registro se ha realizado con éxito'
+    });
+
+    //Cerrar Modal y Mandar registro al Localstorage
+    alertaRegMul.then(function(){
+      $state.go('loginMul');
+      $scope.regMul.hide();
+      $localstorage.set('yaRegistradoM', 'Si Multiple');
+      $localstorage.setObject('UsuarioMultiple', $rootScope.mulUser);  
+      console.log( $localstorage.get("yaRegistradoM") );  
+      console.log( $localstorage.getObject("UsuarioMultiple") );
+    });
+  };
+
+})
+
+//Controlador de la Pantalla de Bienvenida
+.controller('homeCtrl', function($scope, $state, $ionicModal) { 
 })
 
 //Controlador del Registro Simple
 .controller('regSimCtrl', function($scope, $ionicPopup, $state, $localstorage) {
-  $scope.simple = "Individual";
-  // Declaración de la variable para los datos del usuario 
-  $scope.singleUser = {};
 
   //Tomar Fotografía
   $scope.regPick = function() {
@@ -66,47 +134,12 @@ angular.module('starter.controllers', [])
       direction: 1
     });
   };
-
-  // Realizar el Regitro Simple
-  $scope.doRegSim = function() {
-    console.log('Se realizó el Registo Simple', $scope.singleUser);
-
-    // Alerta de Registro Exitoso
-    var alertaRegSim = $ionicPopup.alert({
-     title: '! Mejor Chkte ',
-     template: 'Tu registro se ha realizado con éxito'
-    });
-
-    alertaRegSim.then(function(){
-      $state.go('loginSim');
-      $scope.regSim.hide()
-      $localstorage.set('yaRegistradoS', 'Si Simple');
-      console.log( localStorage.getItem("yaRegistradoS") )
-    });
-  };
 })
 
 //Controlador del Registro Multiple
 .controller('regMulCtrl', function($scope, $state, $ionicPopup, $rootScope, $localstorage) {
-  $scope.multiple = "Multiple";
 
-  // Realizar el Regitro Multiple
-  $scope.doRegMul = function() {
-    console.log('Se realizó el Registo Multiple', $scope.singleUser);
-
-    // Alerta de Registro Exitoso
-    var alertaRegMul = $ionicPopup.alert({
-     title: '! Mejor Chkte ',
-     template: 'Tu registro se ha realizado con éxito'
-    });
-
-    alertaRegMul.then(function(){
-      $state.go('loginMul');
-      $scope.regMul.hide()
-      $localstorage.set('yaRegistradoM', 'Si Multiple');
-      console.log( localStorage.getItem("yaRegistradoM") )
-    });
-  };
+  
 })
 
 //Controlador del Tipo de Registro de Asistencia
@@ -121,11 +154,23 @@ angular.module('starter.controllers', [])
 })
 
 //Controlador del Login
-.controller('loginCtrl', function($scope, $ionicModal) {
+.controller('loginCtrl', function($scope, $ionicModal, $localstorage, $rootScope, $state, $ionicPopup) {
+  $rootScope.singleUser = $localstorage.getObject("UsuarioSimple");
+  $rootScope.mulUser = $localstorage.getObject("UsuarioMultiple");
 
-  //Lanzar el Modal Individual
-  $scope.logIn= function(){
+  //Lanzar el login Simple
+  $scope.logInSim= function(){
     console.log("Abrir Login");
+      console.log( $localstorage.getObject("UsuarioSimple") );
+      console.log( $rootScope.singleUser );
+    $scope.loginModal.show();
+  };
+
+  //Lanzar el login Simple
+  $scope.logInMul= function(){
+    console.log("Abrir Login");
+      console.log( $localstorage.getObject("UsuarioMultiple") );
+      console.log( $rootScope.mulUser );
     $scope.loginModal.show();
   };
 
@@ -135,10 +180,31 @@ angular.module('starter.controllers', [])
   }).then(function(modal){
     $scope.loginModal = modal;
   });
+
+  //Envio de datos de Acceso
+  $scope.loginDataSim = {};
+  $scope.sendLoginSim = function(){
+
+    console.log('Datos del Login', $scope.loginDataSim.pass);
+
+
+    if ( $scope.loginDataSim.pass == $scope.singleUser.pass ) {
+      $state.go('asis.registro').then(
+          $scope.loginModal.hide()
+        );
+      
+    } else {
+      var alertaRegSim = $ionicPopup.alert({
+       title: '! Mejor Chkte ¡',
+       template: 'El Password es incorrecto'
+      });
+    }
+  }
+
 })
 
 //Controlador del Registro de Asistencia
-.controller('ChkteCtrl', function($scope, $state, $ionicPopup, $cordovaBarcodeScanner) {
+.controller('AsistenciaCtrl', function($scope, $state, $ionicPopup, $cordovaBarcodeScanner) {
 
   $scope.registroInit = function() {
     
@@ -193,7 +259,7 @@ angular.module('starter.controllers', [])
 })
 
 //Inicialización de La cámara
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-    console.log(navigator.camera);
-}
+//document.addEventListener("deviceready", onDeviceReady, false);
+//function onDeviceReady() {
+  //  console.log(navigator.camera);
+//}

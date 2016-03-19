@@ -150,6 +150,10 @@ body{
 }
 
 //Registro y Login
+.adminBtn{
+  margin: 8px;
+  color: lighten($dark, 40%);
+}
 .item-stacked-label {
     background-color: #fff;
 }

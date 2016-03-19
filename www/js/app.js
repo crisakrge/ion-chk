@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
+angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
 
 .factory('$localstorage', ['$window', function($window) {
   return {
@@ -22,11 +22,9 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   }
 }])
 
-
-
 .run(function($ionicPlatform, $localstorage) {
   // Resetear Registro
-  //window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");
+  window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");window.localStorage.removeItem("UsuarioSimple");
   // Validación de usuario registrado
   console.log('Tipo de Registro "' + $localstorage.get('yaRegistradoS') + " " + $localstorage.get('yaRegistradoM') + '"');
 
@@ -72,15 +70,14 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   })
 
   // Estado para el Menú principal
-  .state('chkt', {
-    url: '/chkt',
+  .state('asis', {
+    url: '/asis',
     abstract: true,
-    templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
+    templateUrl: 'templates/menu.html'
     })
 
   // Extracto del estado del Chkte
-  .state('chkt.registro', {
+  .state('asis.registro', {
     url: '/registro',
       views: {
         'chtkeView': {
@@ -105,7 +102,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   })
   
   // Extracto del estado del Administrador
-  .state('chkt.admin', {
+  .state('asis.admin', {
     url: '/admin',
       views: {
         'chtkeView': {
@@ -115,7 +112,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   })
 
   // Extracto del estado de la página Acerca De
-  .state('chkt.acerca', {
+  .state('asis.acerca', {
     url: '/acercaDe',
       views: {
         'chtkeView': {
@@ -135,8 +132,3 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   $urlRouterProvider.otherwise('/home');
   }  
 })
-
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-    console.log(navigator.camera);
-}

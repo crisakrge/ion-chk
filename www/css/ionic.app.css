@@ -9831,6 +9831,10 @@ body {
 .txt-positive {
   color: #1E439E; }
 
+.adminBtn {
+  margin: 8px;
+  color: #a5a6a7; }
+
 .item-stacked-label {
   background-color: #fff; }
 
