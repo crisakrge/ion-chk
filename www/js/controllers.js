@@ -6,6 +6,20 @@ angular.module('MejorChkte.controllers', [])
 //===============================================================
 .controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup) {
 
+  //Instanciamos el objeto registroAsis
+  function registroAsis(cliente, userName, fotoName, asisType, asisLatitude, asisLongitude, QRname, asisFecha, asisHora, asisUsername) {
+    this.cliente = cliente;
+    this.user = user;
+    this.fotoName = fotoName;
+    this.asisType = asisType;
+    this.asisLatitude = asisLatitude;
+    this.asisLongitude = asisLongitude;
+    this.QRname = QRname;
+    this.asisfecha = fecha;
+    this.asishora = hora;
+    this.asisuserName = userName;
+  } 
+
   //Modal del Registro Simple
   $ionicModal.fromTemplateUrl('templates/regSim.html',{
     scope: $scope
@@ -65,8 +79,10 @@ angular.module('MejorChkte.controllers', [])
       $state.go('loginSim');
       $scope.regSim.hide();
       $localstorage.set('yaRegistradoS', 'Si Simple');
-      $localstorage.setObject('UsuarioSimple', $rootScope.singleUser);  
+      $localstorage.set('imagenUsuario', $scope.regPicture);
+      $localstorage.setObject('UsuarioSimple', $rootScope.singleUser); 
       console.log( $localstorage.get("yaRegistradoS") );  
+      console.log( $localstorage.get("imagenUsuario") );  
       console.log( $localstorage.getObject("UsuarioSimple") );
     });
   };
@@ -111,6 +127,7 @@ angular.module('MejorChkte.controllers', [])
 //Controlador del Registro Simple
 .controller('regSimCtrl', function($scope, $ionicPopup, $state, $localstorage) {
 
+
   //Tomar Fotografía
   $scope.regPick = function() {
     function onSuccess(data) {
@@ -121,32 +138,27 @@ angular.module('MejorChkte.controllers', [])
         */
         $scope.regPicture = "data:image/jpeg;base64," + data;
       });
-      var image = document.getElementById('myImage');
-      image.src = "data:image/jpeg;base64," + imageData;
-      console.log(image);
-    }
+      //var image = document.getElementById('myImage');
+      //image.src = "data:image/jpeg;base64," + imageData;
+      //console.log(image);
+    };
     function onFail(message) {
       alert('Falló debido a: ' + message);
-    }
+    };
     navigator.camera.getPicture(onSuccess, onFail, {
       quality: 50,
       destinationType: Camera.DestinationType.DATA_URL,
-      direction: 1
+      cameraDirection: 1
     });
   };
 })
 
 //Controlador del Registro Multiple
-.controller('regMulCtrl', function($scope, $state, $ionicPopup, $rootScope, $localstorage) {
-
-  
+.controller('regMulCtrl', function($scope, $state, $ionicPopup, $rootScope, $localstorage) {  
 })
 
 //Controlador del Tipo de Registro de Asistencia
 .controller('regTypeCtrl', function($scope, $state) {
-  $scope.registraTe = function() {
-    $state.go('chkt.registro');
-  };
 })
 
 //Controlador de la Confirmación del registro
@@ -200,31 +212,45 @@ angular.module('MejorChkte.controllers', [])
       });
     }
   }
-
 })
 
 //Controlador del Registro de Asistencia
 .controller('AsistenciaCtrl', function($scope, $state, $ionicPopup, $cordovaBarcodeScanner) {
+  //Instanciamos el objeto registroAsis
+  function registroAsis(cliente, user, fotoName, asisType, asisLatitude, asisLongitude, QRname, asisFecha, asisHora, asisUserName) {
+    this.cliente = cliente;
+    this.user = user;
+    this.fotoName = fotoName;
+    this.asisType = asisType;
+    this.asisLatitude = asisLatitude;
+    this.asisLongitude = asisLongitude;
+    this.QRname = QRname;
+    this.asisFecha = asisFecha;
+    this.asishora = asisHora;
+    this.asisUserName = asisUserName;
+  } 
 
-  $scope.registroInit = function() {
-    
+
+  $scope.initAsis = function() {
+    var registroAsistencia = new registroAsis('Zunfeld', 'Yo', 'Soy', 'Tu', 'Padre');
+
     // Alerta de toma de fotografìa
-    var photoAlert = $ionicPopup.alert({
+    var AlertaPhotoAsistencia = $ionicPopup.alert({
      title: '! Mejor Chkte ',
      template: 'Tomate una fotografía para corroborar tu identidad'
     });
 
+    console.log( registroAsistencia );
+
     // Al clickear la alerta
-    photoAlert.then(function() {
+    AlertaPhotoAsistencia.then(function() {
       console.log('Alerta de la toma de fotografía');
       // Llamada a la cámara del dispositivo
       var takePhoto = navigator.camera.getPicture(onSuccess, onFail, {
         quality: 50,
         destinationType: Camera.DestinationType.DATA_URL,
-        direction: 0
+        cameraDirection: 1
       });
-
-
       // Si la foto es satisfactoria se continua el proceso de registro
       function onSuccess() {
         // Alerta para escaneo de código Qr
@@ -235,19 +261,30 @@ angular.module('MejorChkte.controllers', [])
 
         // Al clickear la alerta se inicia el escaner del QR
         qrAlert.then(
-
-            $scope.leerCodigo = function(){
-              $cordovaBarcodeScanner.scan().then(function(imagenEscaneada){
-                var qrAlert = $ionicPopup.alert({
+          $scope.leerCodigo = function(){
+            $cordovaBarcodeScanner.scan().then(function(imagenEscaneada){
+              
+              //Alerta con los datos del còdigo QR
+              var datosQr = $ionicPopup.alert({
                 title: '! Mejor Chkte ¡',
                 template: imagenEscaneada.text
-                });
-              }, function(error){
-                alert("Ha ocurrido un error:"+ error);
               });
-            }
 
-          );
+              datosQr.then(
+                //pagina de selectión para el typo registro
+                $state.go('regType'),
+                $scope.lanzarAsis = function(){
+                  $state.go('asis.chkte');
+                }
+              );
+              
+            },
+            // Si ocurre algún error al escanear el código
+            function(error){
+              alert("Ha ocurrido un error:"+ error);
+            });
+          }
+        );
       };
 
       // Si ocurre algún error al tomar la fotografía
@@ -257,9 +294,3 @@ angular.module('MejorChkte.controllers', [])
     });
   };
 })
-
-//Inicialización de La cámara
-//document.addEventListener("deviceready", onDeviceReady, false);
-//function onDeviceReady() {
-  //  console.log(navigator.camera);
-//}

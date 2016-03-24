@@ -5,7 +5,7 @@
   </ion-header-bar>
   <ion-content class="padding content-chkte">
   <form ng-submit="doRegMul()">
-    <div class="list bg-light">
+    <div class="list bg-light chkte-form">
       <label class="item item-input item-stacked-label">
         <span class="input-label" ><i class="ion-icon ion-ios-paper"></i> Nombre</span>
         <input type="text" ng-model="mulUser.name" required>
@@ -13,11 +13,11 @@
 
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-email"></i> Correo</span>
-        <input type="text" ng-model="mulUser.mail" required>
+        <input  class="small"type="text" ng-model="mulUser.mail" required>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-person"></i> Usuario</span>
-        <input type="text" value="{{mulUser.mail}}" placeholder="{{mulUser.mail}}" readonly>
+        <input class="small" type="text" value="{{mulUser.mail}}" placeholder="{{mulUser.mail}}" readonly>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-android-lock"></i> Contraseña</span>
@@ -26,7 +26,7 @@
           <div class="item item-avatar item-button-right" href="#">
             <img ng-src="{{regPicture}}">
             <i class="icon ion-android-camera"></i> Foto
-            <button class="button button-calm" ng-click="regPick()">
+            <button type="button" class="button button-calm" ng-click="regPick()">
               <i class="icon ion-android-camera"></i>
             </button>
           </div>

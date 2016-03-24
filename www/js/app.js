@@ -24,7 +24,7 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
 
 .run(function($ionicPlatform, $localstorage) {
   // Resetear Registro
-  window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");window.localStorage.removeItem("UsuarioSimple");
+  //window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");window.localStorage.removeItem("UsuarioSimple");
   // Validación de usuario registrado
   console.log('Tipo de Registro "' + $localstorage.get('yaRegistradoS') + " " + $localstorage.get('yaRegistradoM') + '"');
 
@@ -82,7 +82,7 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
       views: {
         'chtkeView': {
           templateUrl: 'templates/chkte.html',
-          controller: 'ChkteCtrl'
+          controller: 'AsistenciaCtrl'
         }
       }
     })

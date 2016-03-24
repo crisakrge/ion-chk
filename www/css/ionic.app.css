@@ -9744,6 +9744,9 @@ body {
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0d4f9d', endColorstr='#032750',GradientType=1 );
   /* IE6-9 fallback on horizontal gradient */ }
+  .content-chkte h3 {
+    color: #fff;
+    text-align: center; }
 
 .content-reg {
   background-image: url(../img/chkte/back.jpg);
@@ -9859,3 +9862,9 @@ body {
   display: block;
   text-align: center;
   text-decoration: none; }
+
+.chkte-form label input {
+  text-transform: uppercase; }
+
+.chkte-form label input.small {
+  text-transform: lowercase !important; }

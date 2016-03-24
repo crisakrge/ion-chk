@@ -5,31 +5,30 @@
   </ion-header-bar>
   <ion-content class="padding content-chkte">
   <form ng-submit="doRegSim()">
-    <div class="list bg-light">
+    <div class="list bg-light chkte-form">
       <label class="item item-input item-stacked-label">
         <span class="input-label" ><i class="ion-icon ion-ios-paper"></i> Nombre</span>
         <input type="text" ng-model="singleUser.name" required>
       </label>
-
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-email"></i> Correo</span>
-        <input type="text" ng-model="singleUser.mail" required>
+        <input class="small" type="text" ng-model="singleUser.mail" required>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-person"></i> Usuario</span>
-        <input type="text" value="{{singleUser.mail}}" placeholder="{{singleUser.mail}}" ng-model="singleUser.username" readonly>
+        <input class="small" type="text" value="{{singleUser.mail}}" placeholder="{{singleUser.mail}}" ng-model="singleUser.username" readonly>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-android-lock"></i> Contraseña</span>
         <input type="text" ng-model="singleUser.pass" required >
       </label>
-          <div class="item item-avatar item-button-right" href="#">
-            <img ng-src="{{regPicture}}">
-            <i class="icon ion-android-camera"></i> Foto
-            <button class="button button-calm" ng-click="regPick()">
-              <i class="icon ion-android-camera"></i>
-            </button>
-          </div>
+      <div class="item item-avatar item-button-right">
+        <img ng-src="{{regPicture}}">
+        <i class="icon ion-android-camera"></i> Fotografía
+        <button type="button" class="button button-calm" ng-click="regPick()">
+          <i class="icon ion-android-camera"></i>
+        </button>
+      </div>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-pricetag"></i> Licencia</span>
         <input type="text" ng-model="singleUser.key" required>

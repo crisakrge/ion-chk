@@ -6,8 +6,9 @@
   <ion-content class="padding content-chkte">
     <div class="login">
       <div class="img-rounded">
-        <img src="http://crowdcrafting.org/static/img/placeholder.user.png">
+        <img ng-src="{{regPicture}}">
       </div>
+      <h3>Bienvenido:</h3>
       <h2 class="text-center">{{singleUser.name}}</h2>
       <form ng-submit="sendLoginSim()">
         <div class="card login">
