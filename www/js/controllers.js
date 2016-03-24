@@ -5,6 +5,23 @@ angular.module('MejorChkte.controllers', [])
 //               Controlador Principal de la APP
 //===============================================================
 .controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup) {
+  //Funciones y Variables para obtener la fecha y hora
+  var date = new Date();
+  var mes = date.getMonth() + 1;
+  if (mes<10){
+    mes = '0' + mes;
+  };
+  var minutos = date.getMinutes();
+  if (minutos<10){
+    minutos = '0' + minutos;
+  };
+  var seg = date.getSeconds();
+  if (seg<10){
+    seg = '0' + seg;
+  };
+  var obtHoraPrint =  date.getHours() + ":" + minutos + ":" + seg + "hrs" ;
+  var obtHoraSave =  date.getHours() + "/" + minutos + "/" + seg + "hrs" ;
+  var obtFecha = date.getDate() + "/" + mes + "/" + date.getFullYear();
 
   //Instanciamos el objeto registroAsis
   function registroAsis(cliente, userName, fotoName, asisType, asisLatitude, asisLongitude, QRname, asisFecha, asisHora, asisUsername) {
@@ -87,10 +104,24 @@ angular.module('MejorChkte.controllers', [])
     });
   };
 
+  //===============================================================
+  //                  Variable de Nombre
+  //===============================================================
+
+  function makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i=0; i < 5; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+  }
 
   //===============================================================
   //                  Registro Multiple
   //===============================================================
+
   // Variable Registro Individual
   $scope.multiple = "Multiple";
   // Declaración de la variable para los datos del usuario 
@@ -117,7 +148,6 @@ angular.module('MejorChkte.controllers', [])
       console.log( $localstorage.getObject("UsuarioMultiple") );
     });
   };
-
 })
 
 //Controlador de la Pantalla de Bienvenida
@@ -125,32 +155,84 @@ angular.module('MejorChkte.controllers', [])
 })
 
 //Controlador del Registro Simple
-.controller('regSimCtrl', function($scope, $ionicPopup, $state, $localstorage) {
+.controller('regSimCtrl', function($scope, $cordovaCamera, $cordovaFile) {
+  $scope.RegSimImageName = "";
 
+  //===============================================================
+  //                 Toma y guardado de
+  //===============================================================
 
-  //Tomar Fotografía
-  $scope.regPick = function() {
-    function onSuccess(data) {
-      $scope.$apply(function () {
-        /*
-        remember to set the image ng-src in $apply,
-        i tried to set it from outside and it doesn't work.
-        */
-        $scope.regPicture = "data:image/jpeg;base64," + data;
-      });
-      //var image = document.getElementById('myImage');
-      //image.src = "data:image/jpeg;base64," + imageData;
-      //console.log(image);
-    };
-    function onFail(message) {
-      alert('Falló debido a: ' + message);
-    };
-    navigator.camera.getPicture(onSuccess, onFail, {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      cameraDirection: 1
-    });
+// 1
+$scope.images = [];
+ 
+$scope.addImage = function() {
+  // 2
+  var options = {
+    allowEdit : false,
+    popoverOptions: CameraPopoverOptions,
+    quality: 50,
+    destinationType: Camera.DestinationType.FILE_URI,
+    sourceType: Camera.PictureSourceType.CAMERA,
+    encodingType: Camera.EncodingType.JPEG,
+    cameraDirection: 0
   };
+  
+  // 3
+  $cordovaCamera.getPicture(options).then(function(imageData) {
+ 
+    // 4
+    onImageSuccess(imageData);
+ 
+    function onImageSuccess(fileURI) {
+      createFileEntry(fileURI);
+    }
+ 
+    function createFileEntry(fileURI) {
+      window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
+    }
+ 
+    // 5
+    function copyFile(fileEntry) {
+      var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
+      var newName = makeid() + name;
+ 
+      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(fileSystem2) {
+        fileEntry.copyTo(
+          fileSystem2,
+          newName,
+          onCopySuccess,
+          fail
+        );
+      },
+      fail);
+    }
+    
+    // 6
+    function onCopySuccess(entry) {
+      $scope.$apply(function () {
+        $scope.images.push(entry.nativeURL);
+      });
+    }
+ 
+    function fail(error) {
+      console.log("fail: " + error.code);
+    }
+ 
+    function makeid() {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+ 
+      for (var i=0; i < 5; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return text;
+    }
+ 
+  }, function(err) {
+    console.log(err);
+  });
+};
+
 })
 
 //Controlador del Registro Multiple

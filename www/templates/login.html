@@ -1,4 +1,4 @@
-<ion-modal-view>
+<ion-modal-view controller="regSimCtrl">
   <ion-header-bar class="bar bar-header bar-positive">
     <h1 class="title">Mejor Chkte</h1>
     <button class="button button-clear button-primary" ng-click="loginModal.hide()">Cancelar</button>
@@ -6,7 +6,7 @@
   <ion-content class="padding content-chkte">
     <div class="login">
       <div class="img-rounded">
-        <img ng-src="{{regPicture}}">
+        <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" />
       </div>
       <h3>Bienvenido:</h3>
       <h2 class="text-center">{{singleUser.name}}</h2>

@@ -23,9 +23,9 @@
         <input type="text" ng-model="singleUser.pass" required >
       </label>
       <div class="item item-avatar item-button-right">
-        <img ng-src="{{regPicture}}">
+        <img ng-repeat="image in images" ng-src="{{urlForImage(image)}}" />
         <i class="icon ion-android-camera"></i> Fotografía
-        <button type="button" class="button button-calm" ng-click="regPick()">
+        <button type="button" class="button button-calm" ng-click="addImage()">
           <i class="icon ion-android-camera"></i>
         </button>
       </div>
