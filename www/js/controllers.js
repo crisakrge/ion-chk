@@ -19,6 +19,7 @@ angular.module('MejorChkte.controllers', [])
   if (seg<10){
     seg = '0' + seg;
   };
+  
   var obtHoraPrint =  date.getHours() + ":" + minutos + ":" + seg + "hrs" ;
   var obtHoraSave =  date.getHours() + "/" + minutos + "/" + seg + "hrs" ;
   var obtFecha = date.getDate() + "/" + mes + "/" + date.getFullYear();
@@ -155,17 +156,13 @@ angular.module('MejorChkte.controllers', [])
 })
 
 //Controlador del Registro Simple
-.controller('regSimCtrl', function($scope, $cordovaCamera, $cordovaFile) {
+.controller('regSimCtrl', function($scope, $cordovaCamera, $cordovaFile, $localstorage) {
   $scope.RegSimImageName = "";
 
-  //===============================================================
-  //                 Toma y guardado de
-  //===============================================================
-
-// 1
-$scope.images = [];
- 
-$scope.addImage = function() {
+//===============================================================
+//                 Toma y guardado de
+//=============================================================== 
+$scope.TakeUserSim = function() {
   // 2
   var options = {
     allowEdit : false,
@@ -177,59 +174,20 @@ $scope.addImage = function() {
     cameraDirection: 0
   };
   
-  // 3
-  $cordovaCamera.getPicture(options).then(function(imageData) {
- 
-    // 4
-    onImageSuccess(imageData);
- 
-    function onImageSuccess(fileURI) {
-      createFileEntry(fileURI);
-    }
- 
-    function createFileEntry(fileURI) {
-      window.resolveLocalFileSystemURL(fileURI, copyFile, fail);
-    }
- 
-    // 5
-    function copyFile(fileEntry) {
-      var name = fileEntry.fullPath.substr(fileEntry.fullPath.lastIndexOf('/') + 1);
-      var newName = makeid() + name;
- 
-      window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(fileSystem2) {
-        fileEntry.copyTo(
-          fileSystem2,
-          newName,
-          onCopySuccess,
-          fail
-        );
-      },
-      fail);
-    }
-    
-    // 6
-    function onCopySuccess(entry) {
-      $scope.$apply(function () {
-        $scope.images.push(entry.nativeURL);
-      });
-    }
- 
-    function fail(error) {
-      console.log("fail: " + error.code);
-    }
- 
-    function makeid() {
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
- 
-      for (var i=0; i < 5; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      return text;
-    }
- 
+  $cordovaCamera.getPicture(options).then(function(sourcePath) {
+    var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
+    var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
+    console.log("Copying : " + sourceDirectory + sourceFileName);
+    console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
+    $cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName).then(function(success) {
+       $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
+       $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
+      console.log( $localstorage.get("imagenUsuarioSim") );  
+    }, function(error) {
+       console.dir(error);
+    });
   }, function(err) {
-    console.log(err);
+       console.log(err);
   });
 };
 
@@ -250,6 +208,7 @@ $scope.addImage = function() {
 //Controlador del Login
 .controller('loginCtrl', function($scope, $ionicModal, $localstorage, $rootScope, $state, $ionicPopup) {
   $rootScope.singleUser = $localstorage.getObject("UsuarioSimple");
+  $rootScope.singleUserImage = $localstorage.get("imagenUsuarioSim");
   $rootScope.mulUser = $localstorage.getObject("UsuarioMultiple");
 
   //Lanzar el login Simple
@@ -298,21 +257,7 @@ $scope.addImage = function() {
 
 //Controlador del Registro de Asistencia
 .controller('AsistenciaCtrl', function($scope, $state, $ionicPopup, $cordovaBarcodeScanner) {
-  //Instanciamos el objeto registroAsis
-  function registroAsis(cliente, user, fotoName, asisType, asisLatitude, asisLongitude, QRname, asisFecha, asisHora, asisUserName) {
-    this.cliente = cliente;
-    this.user = user;
-    this.fotoName = fotoName;
-    this.asisType = asisType;
-    this.asisLatitude = asisLatitude;
-    this.asisLongitude = asisLongitude;
-    this.QRname = QRname;
-    this.asisFecha = asisFecha;
-    this.asishora = asisHora;
-    this.asisUserName = asisUserName;
-  } 
-
-
+ 
   $scope.initAsis = function() {
     var registroAsistencia = new registroAsis('Zunfeld', 'Yo', 'Soy', 'Tu', 'Padre');
 

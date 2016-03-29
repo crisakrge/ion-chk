@@ -132,3 +132,43 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
   $urlRouterProvider.otherwise('/home');
   }  
 })
+
+//Cambiar campos a Minusculas
+.directive('lowercase', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, modelCtrl) {
+        var lowercase = function(inputValue) {
+          if (inputValue == undefined) inputValue = '';
+          var lowercased = inputValue.toLowerCase();
+          if (lowercased !== inputValue) {
+            modelCtrl.$setViewValue(lowercased);
+            modelCtrl.$render();
+          }
+          return lowercased;
+        }
+        modelCtrl.$parsers.push(lowercase);
+        lowercase(scope[attrs.ngModel]); // lowercase initial value
+      }
+    };
+})
+
+//Cambiar campos a Mayusculas
+.directive('capitalize', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, modelCtrl) {
+        var capitalize = function(inputValue) {
+          if (inputValue == undefined) inputValue = '';
+          var capitalized = inputValue.toUpperCase();
+          if (capitalized !== inputValue) {
+            modelCtrl.$setViewValue(capitalized);
+            modelCtrl.$render();
+          }
+          return capitalized;
+        }
+        modelCtrl.$parsers.push(capitalize);
+        capitalize(scope[attrs.ngModel]); // capitalize initial value
+      }
+    };
+});
