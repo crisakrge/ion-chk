@@ -33,6 +33,10 @@ body{
   background-color: #000000 !important;
 }
 .content-chkte{
+  h3{
+    color: $light;
+    text-align: center;
+  }
   background-color: $chkte;
   background: -moz-radial-gradient(center, ellipse cover,  #0d4f9d 3%, #0d4f9d 3%, #032750 100%); /* FF3.6-15 */
   background: -webkit-radial-gradient(center, ellipse cover,  #0d4f9d 3%,#0d4f9d 3%,#032750 100%); /* Chrome10-25,Safari5.1-6 */
@@ -150,6 +154,10 @@ body{
 }
 
 //Registro y Login
+.adminBtn{
+  margin: 8px;
+  color: lighten($dark, 40%);
+}
 .item-stacked-label {
     background-color: #fff;
 }
@@ -176,5 +184,15 @@ body{
     display: block;
     text-align: center;
     text-decoration: none;
+  }
+}
+.chkte-form{
+  label{
+    input{
+      text-transform: uppercase;
+    }
+    input.small{
+      text-transform: lowercase !important;
+    }
   }
 }

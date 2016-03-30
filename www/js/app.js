@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
+angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
 
 .factory('$localstorage', ['$window', function($window) {
   return {
@@ -22,11 +22,9 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   }
 }])
 
-
-
 .run(function($ionicPlatform, $localstorage) {
   // Resetear Registro
-  //window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");
+  //window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");window.localStorage.removeItem("UsuarioSimple");
   // Validación de usuario registrado
   console.log('Tipo de Registro "' + $localstorage.get('yaRegistradoS') + " " + $localstorage.get('yaRegistradoM') + '"');
 
@@ -72,20 +70,19 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   })
 
   // Estado para el Menú principal
-  .state('chkt', {
-    url: '/chkt',
+  .state('asis', {
+    url: '/asis',
     abstract: true,
-    templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
+    templateUrl: 'templates/menu.html'
     })
 
   // Extracto del estado del Chkte
-  .state('chkt.registro', {
+  .state('asis.registro', {
     url: '/registro',
       views: {
         'chtkeView': {
           templateUrl: 'templates/chkte.html',
-          controller: 'ChkteCtrl'
+          controller: 'AsistenciaCtrl'
         }
       }
     })
@@ -105,7 +102,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   })
   
   // Extracto del estado del Administrador
-  .state('chkt.admin', {
+  .state('asis.admin', {
     url: '/admin',
       views: {
         'chtkeView': {
@@ -115,7 +112,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   })
 
   // Extracto del estado de la página Acerca De
-  .state('chkt.acerca', {
+  .state('asis.acerca', {
     url: '/acercaDe',
       views: {
         'chtkeView': {
@@ -136,7 +133,42 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers'])
   }  
 })
 
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-    console.log(navigator.camera);
-}
+//Cambiar campos a Minusculas
+.directive('lowercase', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, modelCtrl) {
+        var lowercase = function(inputValue) {
+          if (inputValue == undefined) inputValue = '';
+          var lowercased = inputValue.toLowerCase();
+          if (lowercased !== inputValue) {
+            modelCtrl.$setViewValue(lowercased);
+            modelCtrl.$render();
+          }
+          return lowercased;
+        }
+        modelCtrl.$parsers.push(lowercase);
+        lowercase(scope[attrs.ngModel]); // lowercase initial value
+      }
+    };
+})
+
+//Cambiar campos a Mayusculas
+.directive('capitalize', function() {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, modelCtrl) {
+        var capitalize = function(inputValue) {
+          if (inputValue == undefined) inputValue = '';
+          var capitalized = inputValue.toUpperCase();
+          if (capitalized !== inputValue) {
+            modelCtrl.$setViewValue(capitalized);
+            modelCtrl.$render();
+          }
+          return capitalized;
+        }
+        modelCtrl.$parsers.push(capitalize);
+        capitalize(scope[attrs.ngModel]); // capitalize initial value
+      }
+    };
+});
