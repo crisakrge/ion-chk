@@ -158,39 +158,37 @@ angular.module('MejorChkte.controllers', [])
 //Controlador del Registro Simple
 .controller('regSimCtrl', function($scope, $cordovaCamera, $cordovaFile, $localstorage) {
   $scope.RegSimImageName = "";
-
-//===============================================================
-//                 Toma y guardado de
-//=============================================================== 
-$scope.TakeUserSim = function() {
-  // 2
-  var options = {
-    allowEdit : false,
-    popoverOptions: CameraPopoverOptions,
-    quality: 50,
-    destinationType: Camera.DestinationType.FILE_URI,
-    sourceType: Camera.PictureSourceType.CAMERA,
-    encodingType: Camera.EncodingType.JPEG,
-    cameraDirection: 0
-  };
-  
-  $cordovaCamera.getPicture(options).then(function(sourcePath) {
-    var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
-    var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
-    console.log("Copying : " + sourceDirectory + sourceFileName);
-    console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
-    $cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName).then(function(success) {
-       $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
-       $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
-      console.log( $localstorage.get("imagenUsuarioSim") );  
-    }, function(error) {
-       console.dir(error);
+  //===============================================================
+  //                 Toma y guardado de
+  //=============================================================== 
+  $scope.TakeUserSim = function() {
+    // 2
+    var options = {
+      allowEdit : false,
+      popoverOptions: CameraPopoverOptions,
+      quality: 50,
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      encodingType: Camera.EncodingType.JPEG,
+      cameraDirection: 0
+    };
+    
+    $cordovaCamera.getPicture(options).then(function(sourcePath) {
+      var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
+      var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
+      console.log("Copying : " + sourceDirectory + sourceFileName);
+      console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
+      $cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName).then(function(success) {
+         $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
+         $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
+        console.log( $localstorage.get("imagenUsuarioSim") );  
+      }, function(error) {
+         console.dir(error);
+      });
+    }, function(err) {
+         console.log(err);
     });
-  }, function(err) {
-       console.log(err);
-  });
-};
-
+  };
 })
 
 //Controlador del Registro Multiple
@@ -256,8 +254,55 @@ $scope.TakeUserSim = function() {
 })
 
 //Controlador del Registro de Asistencia
-.controller('AsistenciaCtrl', function($scope, $state, $ionicPopup, $cordovaCamera, $cordovaBarcodeScanner) {
- 
+.controller('AsistenciaCtrl', function(
+  $scope,
+  $state,
+  $ionicPopup,
+  $ionicModal,
+  $cordovaCamera,
+  $cordovaBarcodeScanner,
+  $cordovaGeolocation){
+
+  $scope.asis = {};
+  $scope.lat = "";
+  $scope.long = "";
+
+  //Modal para seleccionar el tipo de registro
+  $ionicModal.fromTemplateUrl('templates/regSelect.html',{
+    scope: $scope
+  }).then(function(modal){
+    $scope.regSelect = modal;
+  });
+
+  //Lanzar el Modal para seleccionar el tipo de registro
+  $scope.registroTipo = function() {
+    var posOptions = {timeout: 10000, enableHighAccuracy: true};
+    $scope.regSelect.show();
+    console.log($scope.asis);
+
+    $cordovaGeolocation.getCurrentPosition(posOptions)
+    .then(function (position) {
+      $scope.asis.lat  = position.coords.latitude
+      $scope.asis.long = position.coords.longitude
+    console.log( $scope.lat);
+    console.log( $scope.long);
+    }, function(err) {
+      // error
+    });
+
+
+    console.log( $scope.lat + $scope.long);
+
+  };
+
+  $scope.evniarAsis =function(){
+
+    $scope.regSelect.hide();
+
+  };
+
+  console.log($scope.asis);
+  //Lanzar el registro de asistencia
   $scope.initAsis = function() {
     // Opciones para la toma de la fotografía
     var options = {
