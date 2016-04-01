@@ -24,19 +24,7 @@ angular.module('MejorChkte.controllers', [])
   $rootScope.obtHoraSave =  date.getHours() + "/" + minutos + "/" + seg + "hrs" ;
   $rootScope.obtFecha = date.getDate() + "/" + mes + "/" + date.getFullYear();
 
-  //Instanciamos el objeto registroAsis
-  function registroAsis(cliente, userName, fotoName, asisType, asisLatitude, asisLongitude, QRname, asisFecha, asisHora, asisUsername) {
-    this.cliente = cliente;
-    this.user = user;
-    this.fotoName = fotoName;
-    this.asisType = asisType;
-    this.asisLatitude = asisLatitude;
-    this.asisLongitude = asisLongitude;
-    this.QRname = QRname;
-    this.asisfecha = fecha;
-    this.asishora = hora;
-    this.asisuserName = userName;
-  } 
+  $rootScope.asis = {};
 
   //Modal del Registro Simple
   $ionicModal.fromTemplateUrl('templates/regSim.html',{
@@ -106,20 +94,6 @@ angular.module('MejorChkte.controllers', [])
   };
 
   //===============================================================
-  //                  Variable de Nombre
-  //===============================================================
-
-  function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i=0; i < 5; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  }
-
-  //===============================================================
   //                  Registro Multiple
   //===============================================================
 
@@ -152,45 +126,43 @@ angular.module('MejorChkte.controllers', [])
 })
 
 //Controlador de la Pantalla de Bienvenida
-.controller('homeCtrl', function($scope, $state, $ionicModal) { 
+.controller('homeCtrl', function() { 
 })
 
 //Controlador del Registro Simple
 .controller('regSimCtrl', function($scope, $cordovaCamera, $cordovaFile, $localstorage) {
   $scope.RegSimImageName = "";
-
-//===============================================================
-//                 Toma y guardado de
-//=============================================================== 
-$scope.TakeUserSim = function() {
-  // 2
-  var options = {
-    allowEdit : false,
-    popoverOptions: CameraPopoverOptions,
-    quality: 50,
-    destinationType: Camera.DestinationType.FILE_URI,
-    sourceType: Camera.PictureSourceType.CAMERA,
-    encodingType: Camera.EncodingType.JPEG,
-    cameraDirection: 0
-  };
-  
-  $cordovaCamera.getPicture(options).then(function(sourcePath) {
-    var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
-    var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
-    console.log("Copying : " + sourceDirectory + sourceFileName);
-    console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
-    $cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName).then(function(success) {
-       $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
-       $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
-      console.log( $localstorage.get("imagenUsuarioSim") );  
-    }, function(error) {
-       console.dir(error);
+  //===============================================================
+  //                 Toma y guardado de
+  //=============================================================== 
+  $scope.TakeUserSim = function() {
+    // 2
+    var options = {
+      allowEdit : false,
+      popoverOptions: CameraPopoverOptions,
+      quality: 50,
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      encodingType: Camera.EncodingType.JPEG,
+      cameraDirection: 0
+    };
+    
+    $cordovaCamera.getPicture(options).then(function(sourcePath) {
+      var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
+      var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
+      console.log("Copying : " + sourceDirectory + sourceFileName);
+      console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
+      $cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName).then(function(success) {
+         $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
+         $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
+        console.log( $localstorage.get("imagenUsuarioSim") );  
+      }, function(error) {
+         console.dir(error);
+      });
+    }, function(err) {
+         console.log(err);
     });
-  }, function(err) {
-       console.log(err);
-  });
-};
-
+  };
 })
 
 //Controlador del Registro Multiple
@@ -256,8 +228,99 @@ $scope.TakeUserSim = function() {
 })
 
 //Controlador del Registro de Asistencia
-.controller('AsistenciaCtrl', function($scope, $state, $ionicPopup, $cordovaCamera, $cordovaBarcodeScanner) {
- 
+.controller('AsistenciaCtrl', function(
+  $scope,
+  $state,
+  $ionicPopup,
+  $ionicModal,
+  $cordovaCamera,
+  $cordovaBarcodeScanner,
+  $cordovaGeolocation){
+
+  //$scope.asis = {};
+
+  //Modal para seleccionar el tipo de registro
+  $ionicModal.fromTemplateUrl('templates/regSelect.html',{
+    scope: $scope
+  }).then(function(modal){
+    $scope.regSelect = modal;
+  });
+
+  //Lanzar el Modal para seleccionar el tipo de registro
+  $scope.registroTipo = function() {
+    $scope.regSelect.show();
+    console.log("Lanzar Modal");
+  };
+
+  $scope.evniarRegType = function(){
+    var posOptions = {timeout: 10000, enableHighAccuracy: true};
+    $scope.regSelect.show();
+    console.log($scope.asis);
+
+    $cordovaGeolocation.getCurrentPosition(posOptions)
+    .then(function (position) {
+      $scope.asis.lat  = position.coords.latitude
+      $scope.asis.long = position.coords.longitude
+    console.log( $scope.asis.lat);
+    console.log( $scope.asis.long);
+    }, function(err) {
+      // error
+    });
+    console.log( $scope.asis.lat + $scope.asis.long);
+    $scope.regSelect.hide();
+  };
+
+  $scope.launchBarcode = function(){
+    //Alerta con los datos del còdigo QR
+    var QrAlert = $ionicPopup.alert({
+      title: '! Mejor Chkte ¡',
+      template: 'Escanea tu código QR'
+    });
+    QrAlert.then(function(){
+      $cordovaBarcodeScanner.scan()
+      .then(function(barcodeData) {
+        // Alerta con los datos del Qr
+        var textoQr = barcodeData.text;
+        var validarQr = textoQr.substring(0, 28);
+        console.log(textoQr);
+        console.log(validarQr);
+        console.log(validarQr.length);
+
+        if ( 'http://promociones.chkte.com' ==  validarQr ) {
+          //var datosQr = $ionicPopup.alert({
+            //title: '! Mejor Chkte ¡',
+            //template: textoQr
+          //});
+          //Lanzar Funcion para el tipo de registro
+          registroTipo
+        } else { 
+          var errorQr = $ionicPopup.alert({
+            title: '! Mejor Chkte ¡',
+            template: 'El Código utilizado no es de Chkte.com'
+          });
+        };
+      }, function(error) {
+        // An error occurred
+      });
+      //$cordovaBarcodeScanner.scan().then(function(imagenEscaneada){
+        //Alerta con los datos del còdigo QR
+        //var datosQr = $ionicPopup.alert({
+          //title: '! Mejor Chkte ¡',
+          //template: imagenEscaneada.text
+        //});
+        //datosQr.then(
+          //pagina de selectión para el typo registro
+          //$state.go('regType'),
+          //$scope.lanzarAsis = function(){
+          //$state.go('asis.chkte');
+          //}
+        //); 
+      //};
+    });
+  };
+
+  console.log($scope.asis);
+  //Lanzar el registro de asistencia
   $scope.initAsis = function() {
     // Opciones para la toma de la fotografía
     var options = {
@@ -277,54 +340,35 @@ $scope.TakeUserSim = function() {
     AlertaPhotoAsistencia.then(function(){
       console.log('lanzar Camara del teléfono');
       $cordovaCamera.getPicture(options).then(function() {
-
-        //var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
-        //var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
-        //console.log("Copying : " + sourceDirectory + sourceFileName);
-        //console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
-        //$cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName)
-        //.then(function(success) {
-        //   $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
-        //   $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
-        //  console.log( $localstorage.get("imagenUsuarioSim") );  
-        //}, function(error) {
-        //   console.dir(error);
-        //});
-
         // Alerta con Fecha y hora De la Foto
         var FotoTimeInfo = $ionicPopup.alert({
          title: '! Mejor Chkte ',
          template: 'La fotografia se tomo el ' + $scope.obtFecha + ' a las: ' + $scope.obtHoraPrint
         });
+
         FotoTimeInfo.then(function(){
-          // Alerta para escanear el código Qr
-          var QrAlert = $ionicPopup.alert({
-           title: '! Mejor Chkte ',
-           template: 'Escanea tu código QR'
-          });
-          QrAlert.then(function(){
-          console.log('lanzar lector Código QR');
-          // Lanzar Escaner del Código QR
-          $scope.leerCodigo = function(){
-            $cordovaBarcodeScanner.scan().then(function(imagenEscaneada){
-              //Alerta con los datos del còdigo QR
-              var datosQr = $ionicPopup.alert({
+          //Lanzar escaner de código QR
+          $cordovaBarcodeScanner.scan()
+          .then(function(barcodeData) {
+
+            // Texto Escaneado
+            var textoQr = barcodeData.text;
+            var validarQr = textoQr.substring(0, 28);
+
+            //Validar el texto del código QR
+            if ('http://promociones.chkte.com' ==  validarQr) {
+
+            //Abrir Tipo de Registro  
+            $scope.regSelect.show();
+            console.log("Lanzar Modal");
+            }
+            else { 
+              //Alerta de código QR Erroneo
+              var errorQr = $ionicPopup.alert({
                 title: '! Mejor Chkte ¡',
-                template: imagenEscaneada.text
+                template: 'El Código utilizado no es de Chkte.com'
               });
-              datosQr.then(
-                //pagina de selectión para el typo registro
-                $state.go('regType'),
-                $scope.lanzarAsis = function(){
-                  $state.go('asis.chkte');
-                }
-              ); 
-            },
-            // Si ocurre algún error al escanear el código
-            function(error){
-              alert("Ha ocurrido un error:"+ error);
-            });
-          };
+            };
           });
         });
       }, function(err) {
