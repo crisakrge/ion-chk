@@ -1,6 +1,5 @@
 angular.module('MejorChkte.controllers', [])
 
-
 //===============================================================
 //               Controlador Principal de la APP
 //===============================================================
@@ -20,10 +19,20 @@ angular.module('MejorChkte.controllers', [])
     seg = '0' + seg;
   };
   
+  //Variables para obtener la hora y la fecha
   $rootScope.obtHoraPrint =  date.getHours() + ":" + minutos + ":" + seg + " hrs" ;
   $rootScope.obtHoraSave =  date.getHours() + "/" + minutos + "/" + seg + "hrs" ;
   $rootScope.obtFecha = date.getDate() + "/" + mes + "/" + date.getFullYear();
 
+  //Datos para el Administrador
+  $rootScope.adminData = {
+    "nombre" : "Emmanuel",
+    "pass" : "Zunfeld"
+  };
+  $rootScope.touchIdData = {"valor":false};
+  $localstorage.set('funcionTouchId', $rootScope.touchIdData);
+
+  //Objeto para la asistencia
   $rootScope.asis = {};
 
   //Modal del Registro Simple
@@ -129,14 +138,15 @@ angular.module('MejorChkte.controllers', [])
 .controller('homeCtrl', function() { 
 })
 
-//Controlador del Registro Simple
+
+//===============================================================
+//              Controlador del Registro Simple
+//=============================================================== 
 .controller('regSimCtrl', function($scope, $cordovaCamera, $cordovaFile, $localstorage) {
   $scope.RegSimImageName = "";
-  //===============================================================
-  //                 Toma y guardado de
-  //=============================================================== 
+  // Toma y guardado de Imangen de Registro
   $scope.TakeUserSim = function() {
-    // 2
+    // Opciones para la cámara
     var options = {
       allowEdit : false,
       popoverOptions: CameraPopoverOptions,
@@ -147,11 +157,13 @@ angular.module('MejorChkte.controllers', [])
       cameraDirection: 0
     };
     
+    //Lanzar Fotografía
     $cordovaCamera.getPicture(options).then(function(sourcePath) {
       var sourceDirectory = sourcePath.substring(0, sourcePath.lastIndexOf('/') + 1);
       var sourceFileName = sourcePath.substring(sourcePath.lastIndexOf('/') + 1, sourcePath.length);
       console.log("Copying : " + sourceDirectory + sourceFileName);
       console.log("Copying " + cordova.file.dataDirectory + sourceFileName);
+
       $cordovaFile.copyFile(sourceDirectory, sourceFileName, cordova.file.dataDirectory, sourceFileName).then(function(success) {
          $scope.UserImageSim = cordova.file.dataDirectory + sourceFileName;
          $localstorage.set('imagenUsuarioSim', $scope.UserImageSim);
@@ -165,7 +177,9 @@ angular.module('MejorChkte.controllers', [])
   };
 })
 
-//Controlador del Registro Multiple
+//===============================================================
+//              Controlador del Registro Multiple
+//=============================================================== 
 .controller('regMulCtrl', function($scope, $state, $ionicPopup, $rootScope, $localstorage) {  
 })
 
@@ -177,7 +191,74 @@ angular.module('MejorChkte.controllers', [])
 .controller('regConfirmCtrl', function($scope, $state) {
 })
 
-//Controlador del Login
+//===============================================================
+//              Controlador del Administrador
+//=============================================================== 
+.controller('adminCtrl', function($scope, $state, $ionicPopup, $ionicHistory, $localstorage) {
+
+  //Envio de datos de Administrador
+  $scope.adminInput = {};
+
+  //Validación del registro de administrador
+  $scope.adminLogIn = function(){
+    //si el usuario y contraseña son correctos
+    if ( $scope.adminInput.nombre == $scope.adminData.nombre && $scope.adminInput.pass == $scope.adminData.pass) {
+      $state.go('admin').then(
+          $scope.adminLogin.hide()
+      );
+      $scope.adminInput = {};     
+    } else {
+      //si el usuario es correcto pero contraseña es incoreecta
+      if ($scope.adminInput.nombre == $scope.adminData.nombre) {
+        var alertaAdminDataWrong = $ionicPopup.alert({
+         title: '! Mejor Chkte ¡',
+         template: 'El Password del Administrador es Incorrecto'
+        });
+      //si la contraseña es correcta pero el usuario es incoreecto
+      } else if ($scope.adminInput.pass == $scope.adminData.pass) {
+        var alertaAdminDataWrong = $ionicPopup.alert({
+         title: '! Mejor Chkte ¡',
+         template: 'El Nombre del Administrador es Incorrecto'
+        });
+      //si ambos datos son incorrectos
+      } else {
+        var alertaAdminDataWrong = $ionicPopup.alert({
+         title: '! Mejor Chkte ¡',
+         template: 'Los Datos de Acceso son Incorrectos'
+        });
+      }
+    };
+  };
+  $scope.touchId={};
+  //Guardar Cambios en el Administrador
+  $scope.saveAdminData = function(){
+    //Guardar el valor del touch ID
+    $localstorage.set('funcionTouchId', $scope.touchId.valor);
+    //$scope.touchId = $scope.touchIdData;
+    console.log("Cambios Guardados");
+    console.log($scope.touchIdData);
+    console.log($scope.touchId.valor);
+    console.log($localstorage.get('funcionTouchId'));
+    // Alerta de Registro Exitoso
+    var alertaSaveAdmin = $ionicPopup.alert({
+     title: '! Mejor Chkte ',
+     template: 'Tus datos se han guardado con éxito'
+    });
+    alertaSaveAdmin.then(function(){
+      $ionicHistory.goBack();
+    })
+  };
+
+  //Cancelar Cambios en el Administrador
+  $scope.adminCancel = function(){
+    console.log("Cancelando Cambios");
+    $ionicHistory.goBack();
+  };
+})
+
+//===============================================================
+//                Controlador del Login
+//=============================================================== 
 .controller('loginCtrl', function($scope, $ionicModal, $localstorage, $rootScope, $state, $ionicPopup) {
   $rootScope.singleUser = $localstorage.getObject("UsuarioSimple");
   $rootScope.singleUserImage = $localstorage.get("imagenUsuarioSim");
@@ -191,7 +272,7 @@ angular.module('MejorChkte.controllers', [])
     $scope.loginModal.show();
   };
 
-  //Lanzar el login Simple
+  //Lanzar el login Multiple
   $scope.logInMul= function(){
     console.log("Abrir Login");
       console.log( $localstorage.getObject("UsuarioMultiple") );
@@ -227,7 +308,9 @@ angular.module('MejorChkte.controllers', [])
   }
 })
 
-//Controlador del Registro de Asistencia
+//===============================================================
+//             Controlador del Registro de Asistencia
+//=============================================================== 
 .controller('AsistenciaCtrl', function(
   $scope,
   $state,

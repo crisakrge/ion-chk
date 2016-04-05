@@ -69,6 +69,13 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
     controller: 'loginCtrl'
   })
 
+  // Extracto del estado Login Simple
+  .state('admin', {
+    url: '/admin',
+    templateUrl: 'templates/admin.html',
+    controller: 'adminCtrl'
+  })
+
   // Estado para el Menú principal
   .state('asis', {
     url: '/asis',
