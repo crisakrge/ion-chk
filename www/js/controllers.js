@@ -3,7 +3,7 @@ angular.module('MejorChkte.controllers', [])
 //===============================================================
 //               Controlador Principal de la APP
 //===============================================================
-.controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup) {
+.controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup, $cordovaDevice) {
   //Funciones y Variables para obtener la fecha y hora
   var date = new Date();
   var mes = date.getMonth() + 1;
@@ -134,7 +134,9 @@ angular.module('MejorChkte.controllers', [])
   };
 })
 
-//Controlador de la Pantalla de Bienvenida
+//===============================================================
+//              Controlador de la pantalla de registro
+//=============================================================== 
 .controller('homeCtrl', function() { 
 })
 
@@ -312,17 +314,30 @@ angular.module('MejorChkte.controllers', [])
 //             Controlador del Registro de Asistencia
 //=============================================================== 
 .controller('AsistenciaCtrl', function(
+  $rootScope,
   $scope,
   $state,
   $ionicPopup,
   $ionicModal,
   $cordovaCamera,
   $cordovaBarcodeScanner,
-  $cordovaGeolocation){
+  $cordovaGeolocation,
+  $localstorage){
 
-  //$scope.asis = {};
 
-  //Modal para seleccionar el tipo de registro
+  $rootScope.datosAsis = {};
+  $scope.datosUsuario = $localstorage.getObject("UsuarioSimple");
+
+  $scope.datosAsis.cli = $scope.datosUsuario.cli ; 
+  $scope.datosAsis.nombre = $scope.datosUsuario.name ;
+
+
+  console.log( "Los datos del usuario son:" );
+  console.log( $scope.datosUsuario );
+  console.log( "Los datos de la asistencia:" );
+  console.log( $scope.datosAsis );
+
+  //Modal para de selección de Registro
   $ionicModal.fromTemplateUrl('templates/regSelect.html',{
     scope: $scope
   }).then(function(modal){
@@ -338,7 +353,6 @@ angular.module('MejorChkte.controllers', [])
   $scope.evniarRegType = function(){
     var posOptions = {timeout: 10000, enableHighAccuracy: true};
     $scope.regSelect.show();
-    console.log($scope.asis);
 
     $cordovaGeolocation.getCurrentPosition(posOptions)
     .then(function (position) {
@@ -346,6 +360,9 @@ angular.module('MejorChkte.controllers', [])
       $scope.asis.long = position.coords.longitude
     console.log( $scope.asis.lat);
     console.log( $scope.asis.long);
+    $scope.linkMaps = "https://www.google.es/maps/place/" + $scope.asis.lat + "," + $scope.asis.long;
+    console.log("https://www.google.es/maps/place/" + $scope.asis.lat + "," + $scope.asis.long);
+    console.log($scope.linkMaps);
     }, function(err) {
       // error
     });
@@ -362,7 +379,7 @@ angular.module('MejorChkte.controllers', [])
     QrAlert.then(function(){
       $cordovaBarcodeScanner.scan()
       .then(function(barcodeData) {
-        // Alerta con los datos del Qr
+        // Datos del Código Qr
         var textoQr = barcodeData.text;
         var validarQr = textoQr.substring(0, 28);
         console.log(textoQr);
@@ -370,11 +387,6 @@ angular.module('MejorChkte.controllers', [])
         console.log(validarQr.length);
 
         if ( 'http://promociones.chkte.com' ==  validarQr ) {
-          //var datosQr = $ionicPopup.alert({
-            //title: '! Mejor Chkte ¡',
-            //template: textoQr
-          //});
-          //Lanzar Funcion para el tipo de registro
           registroTipo
         } else { 
           var errorQr = $ionicPopup.alert({
@@ -385,25 +397,12 @@ angular.module('MejorChkte.controllers', [])
       }, function(error) {
         // An error occurred
       });
-      //$cordovaBarcodeScanner.scan().then(function(imagenEscaneada){
-        //Alerta con los datos del còdigo QR
-        //var datosQr = $ionicPopup.alert({
-          //title: '! Mejor Chkte ¡',
-          //template: imagenEscaneada.text
-        //});
-        //datosQr.then(
-          //pagina de selectión para el typo registro
-          //$state.go('regType'),
-          //$scope.lanzarAsis = function(){
-          //$state.go('asis.chkte');
-          //}
-        //); 
-      //};
     });
   };
 
-  console.log($scope.asis);
-  //Lanzar el registro de asistencia
+  // 
+  // Lanzar el Registro de Asistencia
+  //
   $scope.initAsis = function() {
     // Opciones para la toma de la fotografía
     var options = {
@@ -415,11 +414,14 @@ angular.module('MejorChkte.controllers', [])
       encodingType: Camera.EncodingType.JPEG,
       cameraDirection: 1
     };
-    // Alerta de toma de fotografìa
+
+    // Alerta de toma de fotografía
     var AlertaPhotoAsistencia = $ionicPopup.alert({
      title: '! Mejor Chkte ',
      template: 'Tomate una fotografía para corroborar tu identidad' 
     });
+
+    // Alerta de toma de fotografía
     AlertaPhotoAsistencia.then(function(){
       console.log('lanzar Camara del teléfono');
       $cordovaCamera.getPicture(options).then(function() {
@@ -428,6 +430,8 @@ angular.module('MejorChkte.controllers', [])
          title: '! Mejor Chkte ',
          template: 'La fotografia se tomo el ' + $scope.obtFecha + ' a las: ' + $scope.obtHoraPrint
         });
+        $scope.datosAsis.fecha = $scope.obtFecha;
+        $scope.datosAsis.hora = $scope.obtHoraPrint;
 
         FotoTimeInfo.then(function(){
           //Lanzar escaner de código QR
@@ -436,8 +440,11 @@ angular.module('MejorChkte.controllers', [])
 
             // Texto Escaneado
             var textoQr = barcodeData.text;
+            $scope.datosAsis.nombreQr = barcodeData.text;
             var validarQr = textoQr.substring(0, 28);
 
+            console.log( "Los datos de la asistencia:" );
+            console.log( $scope.datosAsis );
             //Validar el texto del código QR
             if ('http://promociones.chkte.com' ==  validarQr) {
 
