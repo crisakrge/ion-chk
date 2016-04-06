@@ -329,6 +329,10 @@ angular.module('MejorChkte.controllers', ['starter.services'])
 
 
   $rootScope.datosAsis = {};
+
+
+
+
   $scope.datosUsuario = $localstorage.getObject("UsuarioSimple");
 
   $scope.datosAsis.cli = $scope.datosUsuario.cli ; 
@@ -369,6 +373,7 @@ angular.module('MejorChkte.controllers', ['starter.services'])
     }, function(err) {
       // error
     });
+    
     console.log( $scope.asis.lat + $scope.asis.long);
     $scope.regSelect.hide();
   };
