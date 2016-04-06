@@ -12,11 +12,11 @@
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-email"></i> Correo</span>
-        <input class="small" type="text" ng-model="singleUser.mail" required lowercase>
+        <input class="small" type="text" ng-model="singleUser.email" required lowercase>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-person"></i> Usuario</span>
-        <input class="small" type="text" value="{{singleUser.mail}}" placeholder="{{singleUser.mail}}" ng-model="singleUser.username" readonly lowercase>
+        <input class="small" type="text" value="{{singleUser.email}}" placeholder="{{singleUser.email}}" readonly>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-android-lock"></i> Contraseña</span>
@@ -32,7 +32,7 @@
       </div>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-pricetag"></i> Licencia</span>
-        <input type="text" ng-model="singleUser.key" required capitalize>
+        <input type="text" ng-model="singleUser.licencia" required capitalize>
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label"><i class="ion-icon ion-ios-people"></i> Cliente</span>
