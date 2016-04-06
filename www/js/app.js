@@ -4,6 +4,7 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
 
+//Factory para el guardado de datos dentro del dispositivo
 .factory('$localstorage', ['$window', function($window) {
   return {
     set: function(key, value) {
@@ -21,14 +22,27 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
   }
 }])
 
-.run(function($ionicPlatform, $localstorage) {
+.run(function($ionicPlatform, $localstorage, $http) {
   // Resetear Registro
-  //window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");window.localStorage.removeItem("UsuarioSimple");
+  // window.localStorage.removeItem("yaRegistradoS");window.localStorage.removeItem("yaRegistradoM");window.localStorage.removeItem("UsuarioSimple");
+
+  //Objeto con la definicion de los headers del
+  //request HTTp, vamos a enviarle JSON al servidor
+  //y vamos a recibir Json del servidor.
+  //Al objeto $http, le establecemos sus propiedades
+  //por defecto para que utilice los headers que 
+  //definimos arriba
+  var defaultHTTPHeaders = {
+          'Content-Type' : 'application/json',
+          'Accept' : 'application/json'
+      };
+
+  $http.defaults.headers.post = defaultHTTPHeaders;
+
   // Validación de usuario registrado
   console.log('Tipo de Registro "' + $localstorage.get('yaRegistradoS') + " " + $localstorage.get('yaRegistradoM') + '"');
 
   $ionicPlatform.ready(function() {
-
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -43,6 +57,7 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
       StatusBar.styleDefault();
     }
   });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider){
@@ -129,34 +144,34 @@ angular.module('MejorChkte', ['ionic', 'ngCordova', 'MejorChkte.controllers'])
 
   //$urlRouterProvider.otherwise('/home');
   if(window.localStorage['yaRegistradoS']){
-  $urlRouterProvider.otherwise('/loginS');
+    $urlRouterProvider.otherwise('/loginS');
   }
   else if(window.localStorage['yaRegistradoM']){
-  $urlRouterProvider.otherwise('/loginM');
+    $urlRouterProvider.otherwise('/loginM');
   }
   else{
-  $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise('/home');
   }  
 })
 
-//Cambiar campos a Minusculas
-.directive('lowercase', function() {
-    return {
-      require: 'ngModel',
-      link: function(scope, element, attrs, modelCtrl) {
-        var lowercase = function(inputValue) {
-          if (inputValue == undefined) inputValue = '';
-          var lowercased = inputValue.toLowerCase();
-          if (lowercased !== inputValue) {
-            modelCtrl.$setViewValue(lowercased);
-            modelCtrl.$render();
-          }
-          return lowercased;
+//Cambiar campos a Minúsculas
+.directive('lowercase', function () {
+  return {
+    require: 'ngModel',
+    link: function ($scope, elem, attrs, ngModelCtrl) {
+      var lowercase = function (inputValue) {
+        if(inputValue == undefined) inputValue = '';
+        var lowercased = inputValue.toLowerCase();
+        if(lowercased !== inputValue) {
+          ngModelCtrl.$setViewValue(lowercased);
+          ngModelCtrl.$render();
         }
-        modelCtrl.$parsers.push(lowercase);
-        lowercase(scope[attrs.ngModel]); // lowercase initial value
+        return lowercased;
       }
-    };
+      ngModelCtrl.$parsers.unshift(lowercase);
+      lowercase($scope[attrs.ngModel]);
+    }
+  };
 })
 
 //Cambiar campos a Mayusculas

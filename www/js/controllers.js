@@ -1,9 +1,9 @@
-angular.module('MejorChkte.controllers', [])
+angular.module('MejorChkte.controllers', ['starter.services'])
 
 //===============================================================
 //               Controlador Principal de la APP
 //===============================================================
-.controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup, $cordovaDevice) {
+.controller('ChkteCtrl', function($rootScope, $scope, $state, $ionicModal, $localstorage, $ionicPopup, singleUserFactory, mulUserFactory, asisUserFactory, $cordovaDevice) {
   //Funciones y Variables para obtener la fecha y hora
   var date = new Date();
   var mes = date.getMonth() + 1;
@@ -75,12 +75,15 @@ angular.module('MejorChkte.controllers', [])
   //                  Registro Individual
   //===============================================================
   $scope.simple = "Individual";
+
+
   // Declaración de la variable para los datos del usuario 
   $rootScope.singleUser = {};
 
   // Realizar el Regitro Simple
   $scope.doRegSim = function() {
 
+    singleUserFactory.doRegSim($rootScope.singleUser);
     console.log('Se realizó el Registo Simple', $rootScope.singleUser);
 
     // Alerta de Registro Exitoso
@@ -109,11 +112,11 @@ angular.module('MejorChkte.controllers', [])
   // Variable Registro Individual
   $scope.multiple = "Multiple";
   // Declaración de la variable para los datos del usuario 
-  $rootScope.mulUser = [];
+  $rootScope.mulUser = {};
 
   // Realizar el Regitro Simple
   $scope.doRegMul = function() {
-
+    mulUserFactory.doRegMul($rootScope.mulUser);
     console.log('Se realizó el Registo Multiple', $rootScope.mulUser);
 
     // Alerta de Registro Exitoso
