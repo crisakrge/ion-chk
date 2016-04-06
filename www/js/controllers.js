@@ -347,61 +347,8 @@ angular.module('MejorChkte.controllers', ['starter.services'])
     $scope.regSelect = modal;
   });
 
-  //Lanzar el Modal para seleccionar el tipo de registro
-  $scope.registroTipo = function() {
-    $scope.regSelect.show();
-    console.log("Lanzar Modal");
-  };
 
-  $scope.evniarRegType = function(){
-    var posOptions = {timeout: 10000, enableHighAccuracy: true};
-    $scope.regSelect.show();
-
-    $cordovaGeolocation.getCurrentPosition(posOptions)
-    .then(function (position) {
-      $scope.asis.lat  = position.coords.latitude
-      $scope.asis.long = position.coords.longitude
-    console.log( $scope.asis.lat);
-    console.log( $scope.asis.long);
-    $scope.linkMaps = "https://www.google.es/maps/place/" + $scope.asis.lat + "," + $scope.asis.long;
-    console.log("https://www.google.es/maps/place/" + $scope.asis.lat + "," + $scope.asis.long);
-    console.log($scope.linkMaps);
-    }, function(err) {
-      // error
-    });
-    console.log( $scope.asis.lat + $scope.asis.long);
-    $scope.regSelect.hide();
-  };
-
-  $scope.launchBarcode = function(){
-    //Alerta con los datos del còdigo QR
-    var QrAlert = $ionicPopup.alert({
-      title: '! Mejor Chkte ¡',
-      template: 'Escanea tu código QR'
-    });
-    QrAlert.then(function(){
-      $cordovaBarcodeScanner.scan()
-      .then(function(barcodeData) {
-        // Datos del Código Qr
-        var textoQr = barcodeData.text;
-        var validarQr = textoQr.substring(0, 28);
-        console.log(textoQr);
-        console.log(validarQr);
-        console.log(validarQr.length);
-
-        if ( 'http://promociones.chkte.com' ==  validarQr ) {
-          registroTipo
-        } else { 
-          var errorQr = $ionicPopup.alert({
-            title: '! Mejor Chkte ¡',
-            template: 'El Código utilizado no es de Chkte.com'
-          });
-        };
-      }, function(error) {
-        // An error occurred
-      });
-    });
-  };
+  
 
   // 
   // Lanzar el Registro de Asistencia
@@ -451,9 +398,29 @@ angular.module('MejorChkte.controllers', ['starter.services'])
             //Validar el texto del código QR
             if ('http://promociones.chkte.com' ==  validarQr) {
 
-            //Abrir Tipo de Registro  
-            $scope.regSelect.show();
-            console.log("Lanzar Modal");
+              //Abrir Tipo de Registro  
+              $scope.regSelect.show();
+              console.log("Lanzar Modal");
+              $scope.evniarRegType = function(){
+                var posOptions = {timeout: 10000, enableHighAccuracy: true};
+                $scope.regSelect.show();
+
+                $cordovaGeolocation.getCurrentPosition(posOptions)
+                .then(function (position) {
+                  $scope.datosAsis.lat  = position.coords.latitude
+                  $scope.datosAsis.long = position.coords.longitude
+                console.log( $scope.datosAsis.lat);
+                console.log( $scope.datosAsis.long);
+                $scope.datosAsis.linkMaps = "https://www.google.es/maps/place/" + $scope.datosAsis.lat + "," + $scope.datosAsis.long;
+                console.log("https://www.google.es/maps/place/" + $scope.datosAsis.lat + "," + $scope.datosAsis.long);
+                console.log($scope.datosAsis.linkMaps);
+                console.log($scope.datosAsis);
+                }, function(err) {
+                  // error
+                });
+                console.log( $scope.datosAsis.lat + $scope.datosAsis.long);
+                $scope.regSelect.hide();
+              };
             }
             else { 
               //Alerta de código QR Erroneo
